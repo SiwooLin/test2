@@ -13,6 +13,8 @@
       text-align: center;
       padding: 40px;
       box-sizing: border-box;
+      min-height: 100vh;
+      position: relative;
     }
     h1 {
       font-size: 32px;
@@ -25,188 +27,315 @@
       margin-bottom: 24px;
       color: #ff6f00;
     }
-
-    #adminBtn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: #8e44ad;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      z-index: 9999;
-    }
-
-    #adminModal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    #adminModalContent {
-      background-color: #111;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px #8e44ad;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #adminModalContent input {
-      padding: 10px;
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px;
       font-size: 16px;
-      border-radius: 8px;
       border: none;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    #adminModalContent button {
-      background-color: #8e44ad;
-      border: none;
-      padding: 8px 16px;
+      border-radius: 999px;
+      background-color: #111;
       color: #fff;
-      border-radius: 8px;
+      box-shadow: 0 0 8px #ff6f00;
+      outline: none;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
+      box-shadow: 0 0 12px #8e44ad;
+    }
+    select {
+      width: 150px;
+      padding: 8px 10px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      background-color: #111;
+      color: #fff;
+      margin: 0 10px 20px 10px;
+      box-shadow: 0 0 8px #ff6f00;
       cursor: pointer;
     }
-
-    .section {
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 5px;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+      border: 1px solid #8e44ad;
+      background-color: #111;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #8e44ad;
+      color: #fff;
+    }
+    #adminToggleBtn {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      background-color: #8e44ad;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      z-index: 9999;
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #8e44ad;
+    }
+    #adminToggleBtn:hover {
+      background-color: #a461d9;
+    }
+    #adminArea {
+      max-width: 700px;
+      margin: 20px auto 40px auto;
       background-color: #111;
       border: 1px solid #8e44ad;
       box-shadow: 0 0 8px #8e44ad;
       border-radius: 12px;
       padding: 20px;
-      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+    /* 관리자 폼 중앙 정렬 + 세로 배치 */
+    #adminForm {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 가로 중앙 정렬 */
+      gap: 12px 0;
+      text-align: center;
+    }
+    #adminForm label {
+      display: block;
+      min-width: auto;
+      text-align: center;
+      margin-bottom: 4px;
+      user-select: none;
+      color: #ff6f00;
+    }
+    #adminForm input, #adminForm select {
+      max-width: 300px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #adminSearchInput {
+      max-width: 300px;
+      margin-bottom: 12px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto 20px auto;
+      border-collapse: collapse;
       font-size: 14px;
-      line-height: 1.6;
-      white-space: pre-line;
-      text-align: left;
+      cursor: default;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #8e44ad;
+      text-align: center;
+      word-break: break-word;
+    }
+    th {
+      background-color: #1a1a1a;
+      color: #ff6f00;
+    }
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    tr:nth-child(odd) {
+      background-color: #2a2a2a;
+    }
+    tr:hover {
+      background-color: #333;
+      cursor: pointer;
+    }
+    #noResult {
+      color: #ff6f00;
+      margin-top: 10px;
+      font-size: 15px;
+    }
+    #manual, #price, #songs, #categorySelector, #initialButtons, #searchInput {
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
     }
-
-    .admin-editable {
-      width: 100%;
-      min-height: 120px;
-      background-color: #1a1a1a;
-      color: #fff;
+    #manual, #price {
+      text-align: left;
+      padding: 20px;
+      background-color: #111;
       border: 1px solid #8e44ad;
-      padding: 10px;
-      font-family: 'Jua', sans-serif;
-      font-size: 14px;
-      border-radius: 8px;
+      box-shadow: 0 0 8px #8e44ad;
+      border-radius: 12px;
+      white-space: pre-line;
+      margin-bottom: 30px;
+    }
+    #categorySelector, #initialButtons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
       margin-bottom: 10px;
     }
-    .admin-edit-btn {
-      margin-bottom: 20px;
-      background-color: #8e44ad;
-      color: #fff;
+    .orange-btn {
+      border-color: #ff6f00;
+      color: #ff6f00;
+      background-color: #111;
+    }
+    .orange-btn:hover {
+      background-color: #ff6f00;
+      color: #111;
+    }
+    .active-btn {
+      background-color: #ff6f00 !important;
+      color: #111 !important;
+      border-color: #ff6f00 !important;
+    }
+    /* Layout adjustments for admin buttons below form */
+    #adminButtons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    #adminButtons button {
+      min-width: 120px;
+    }
+
+    /* 비밀번호 입력 모달 스타일 */
+    #pwModalOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+    #pwModal {
+      background-color: #222;
+      padding: 24px 32px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px #8e44ad;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+    }
+    #pwModal input[type="password"] {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 999px;
       border: none;
-      padding: 6px 12px;
-      border-radius: 8px;
+      background-color: #111;
+      color: #fff;
+      box-shadow: 0 0 8px #ff6f00;
+      outline: none;
+      text-align: center;
+      display: block;
+    }
+    #pwModal button {
+      padding: 10px 24px;
+      font-size: 16px;
+      border-radius: 20px;
+      background-color: #8e44ad;
+      border: none;
+      color: white;
       cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    #pwModal button:hover {
+      background-color: #a461d9;
+    }
+    #pwErrorMsg {
+      color: #ff6f00;
+      margin-bottom: 12px;
+      height: 18px;
+      font-size: 14px;
+      user-select: none;
     }
   </style>
 </head>
 <body>
+  <h1 id="title" onclick="showSection('manual')">RIMO’S SONG BOOK</h1>
+  <p class="headlineNotice" id="headlineNotice">📌 노래책 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
 
-<h1>RIMO’S SONG BOOK</h1>
-<p class="headlineNotice">📌 노래체크 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
+  <!-- 관리자 모드 토글 버튼 -->
+  <button id="adminToggleBtn" title="관리자 모드 전환">관리자 모드</button>
 
-<button id="adminBtn" onclick="openAdminModal()">관리자 모드</button>
+  <!-- 노래책 기본 UI -->
+  <div id="mainUI">
+    <input type="text" id="searchInput" placeholder="가수 / 제목 검색" oninput="handleSearch()" style="display:none; margin-bottom:20px; max-width:700px;"/>
 
-<div id="adminModal">
-  <div id="adminModalContent">
-    <p>관리자 비밀번호 입력</p>
-    <input type="password" id="adminPasswordInput" placeholder="비밀번호" />
-    <button onclick="checkAdminPassword()">확인</button>
+    <div>
+      <button onclick="showSection('manual')">노래책 설명서</button>
+      <button onclick="showSection('price')">가격표</button>
+      <button onclick="showSection('songs')">노래목록</button>
+    </div>
+
+    <div id="manual" style="display:none;">
+      • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
+      (코드도 적어주시면 감사합니다!)<br/>
+      • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
+      (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
+      • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
+      • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
+      ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
+    </div>
+
+    <div id="price" style="display:none;">
+      • 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
+      • 어려운 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
+      • 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능합니다.<br/>
+      • 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.
+    </div>
+
+    <div id="songs" style="display:none; margin-top: 20px;">
+      <div id="categorySelector">
+        <button class="orange-btn active-btn" onclick="selectCategory('전체')" id="cat-btn-전체">전체</button>
+        <button class="orange-btn" onclick="selectCategory('Kpop')" id="cat-btn-Kpop">K-pop</button>
+        <button class="orange-btn" onclick="selectCategory('Kpop 아이돌')" id="cat-btn-Kpop 아이돌">K-pop 아이돌</button>
+        <button class="orange-btn" onclick="selectCategory('Pop')" id="cat-btn-Pop">Pop</button>
+      </div>
+      <div id="initialButtons" style="margin-top: 15px;"></div>
+    </div>
+
+    <table id="songTable" style="display:none;">
+      <thead>
+        <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
+      </thead>
+      <tbody id="songList"></tbody>
+    </table>
+
+    <p id="noResult" style="display:none;">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
   </div>
-</div>
 
-<div id="manual" class="section">
-  <div id="manualView">
-    • 노래 신청을 할때는 꿄!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
-    (코드도 적어주시면 감사합니다!)<br/>
-    • 컬디션에 따라 부른기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.<br/>
-    (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
-    • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
-    • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
-    ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
-  </div>
-  <textarea id="manualEdit" class="admin-editable" style="display:none;"></textarea>
-  <button id="manualSaveBtn" class="admin-edit-btn" style="display:none;" onclick="saveManual()">수정 완료</button>
-</div>
+  <!-- 관리자 영역 -->
+  <div id="adminArea">
+    <input type="text" id="adminSearchInput" placeholder="가수 / 제목 검색" oninput="handleAdminSearch()" />
+    <form id="adminForm" onsubmit="return false;">
+      <label for="adminCategory">카테고리</label>
+      <select id="adminCategory">
+        <option value="Kpop">K-pop</option>
+        <option value="Kpop 아이돌">K-pop 아이돌</option>
+        <option value="Pop">Pop</option>
+      </select>
 
-<div id="price" class="section">
-  <div id="priceView">
-    • 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능\uud569니다.<br/>
-    • 어렵은 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능\uud569니다.<br/>
-    • 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능\uud569니다.<br/>
-    • 개인 소장 노래 녹음본 (미핑 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능\uud569니다.
-  </div>
-  <textarea id="priceEdit" class="admin-editable" style="display:none;"></textarea>
-  <button id="priceSaveBtn" class="admin-edit-btn" style="display:none;" onclick="savePrice()">수정 완료</button>
-</div>
-
-<script>
-  const ADMIN_PASSWORD = "rimo1234";
-
-  function openAdminModal() {
-    document.getElementById('adminModal').style.display = 'flex';
-    document.getElementById('adminPasswordInput').value = '';
-    document.getElementById('adminPasswordInput').focus();
-  }
-
-  function checkAdminPassword() {
-    const input = document.getElementById('adminPasswordInput').value;
-    if (input === ADMIN_PASSWORD) {
-      document.getElementById('adminModal').style.display = 'none';
-      enableAdminMode();
-    } else {
-      alert("비밀번호가 틀린것같습니다.");
-    }
-  }
-
-  function enableAdminMode() {
-    const manualView = document.getElementById('manualView');
-    const manualEdit = document.getElementById('manualEdit');
-    manualEdit.value = manualView.innerText;
-    manualView.style.display = 'none';
-    manualEdit.style.display = 'block';
-    document.getElementById('manualSaveBtn').style.display = 'inline-block';
-
-    const priceView = document.getElementById('priceView');
-    const priceEdit = document.getElementById('priceEdit');
-    priceEdit.value = priceView.innerText;
-    priceView.style.display = 'none';
-    priceEdit.style.display = 'block';
-    document.getElementById('priceSaveBtn').style.display = 'inline-block';
-  }
-
-  function saveManual() {
-    const manualView = document.getElementById('manualView');
-    const manualEdit = document.getElementById('manualEdit');
-    manualView.innerText = manualEdit.value;
-    manualView.style.display = 'block';
-    manualEdit.style.display = 'none';
-    document.getElementById('manualSaveBtn').style.display = 'none';
-  }
-
-  function savePrice() {
-    const priceView = document.getElementById('priceView');
-    const priceEdit = document.getElementById('priceEdit');
-    priceView.innerText = priceEdit.value;
-    priceView.style.display = 'block';
-    priceEdit.style.display = 'none';
-    document.getElementById('priceSaveBtn').style.display = 'none';
-  }
-</script>
-
-</body>
-</html>
+      <label for="adminInitial">초성</label>
+      <select id="adminInitial">
+        <!-- 한글 초성 -->
+        <option value="ㄱ">ㄱ</option><option value="ㄴ">ㄴ</option><option value="ㄷ">ㄷ</option><option value="ㄹ">ㄹ</option><option value="ㅁ">ㅁ</option>
+        <option value="ㅂ">ㅂ</option><option value="ㅅ">ㅅ</option><option
