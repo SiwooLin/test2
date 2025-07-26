@@ -1,384 +1,305 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<title>RIMO’S SONG BOOK</title>
-<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-<style>
-  /* 기본 스타일 */
-  body {
-    margin: 0;
-    background-color: #000;
-    color: #fff;
-    font-family: 'Jua', sans-serif;
-    text-align: center;
-    padding: 40px 20px 60px;
-    box-sizing: border-box;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h1 {
-    font-size: 32px;
-    margin-bottom: 8px;
-    color: #ff6f00;
-    cursor: pointer;
-  }
-  .headlineNotice {
-    font-size: 15px;
-    margin-bottom: 24px;
-    color: #ff6f00;
-    max-width: 700px;
-  }
-  input[type="text"], select {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 999px;
-    background-color: #111;
-    color: #fff;
-    box-shadow: 0 0 8px #ff6f00;
-    outline: none;
-    text-align: center;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-  }
-  input[type="text"]:focus, select:focus {
-    box-shadow: 0 0 12px #8e44ad;
-  }
-  button {
-    padding: 8px 16px;
-    font-size: 14px;
-    background-color: #111;
-    color: #fff;
-    border-radius: 20px;
-    cursor: pointer;
-    margin: 5px;
-    border: 1px solid #8e44ad;
-    user-select: none;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  button:hover {
-    background-color: #8e44ad;
-  }
-  .orange-btn {
-    border-color: #ff6f00;
-    color: #ff6f00;
-  }
-  .orange-btn:hover {
-    background-color: #ff6f00;
-    color: #111;
-  }
-  .active-btn {
-    background-color: #ff6f00 !important;
-    color: #111 !important;
-    border-color: #ff6f00 !important;
-  }
-  .section {
-    background-color: #111;
-    border: 1px solid #8e44ad;
-    box-shadow: 0 0 8px #8e44ad;
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
-    font-size: 14px;
-    line-height: 1.6;
-    white-space: pre-line;
-    text-align: left;
-    max-width: 700px;
-    width: 100%;
-  }
-  table {
-    width: 100%;
-    max-width: 700px;
-    margin: 20px auto 0;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  th, td {
-    padding: 12px;
-    border: 1px solid #8e44ad;
-    text-align: center;
-  }
-  th {
-    background-color: #1a1a1a;
-  }
-  tr:nth-child(even) {
-    background-color: #1a1a1a;
-  }
-  tr:nth-child(odd) {
-    background-color: #2a2a2a;
-  }
-  #noResult {
-    display: none;
-    color: #ff6f00;
-    margin-top: 20px;
-    font-size: 15px;
-    max-width: 700px;
-  }
-  #categorySelector, #initialButtons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 10px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  /* 관리자 모드 전용 영역 */
-  #adminSection {
-    display: none;
-    background-color: #111;
-    border: 1px solid #8e44ad;
-    box-shadow: 0 0 8px #8e44ad;
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
-    font-size: 14px;
-    line-height: 1.6;
-    white-space: pre-line;
-    max-width: 700px;
-    width: 100%;
-    text-align: left;
-  }
-  #adminSection h2 {
-    color: #ff6f00;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-  #adminForm label {
-    font-weight: bold;
-    margin-top: 12px;
-    display: block;
-    color: #ff6f00;
-  }
-  #adminForm input[type="text"], #adminForm select {
-    width: 100%;
-    margin-top: 4px;
-  }
-  #adminForm button {
-    margin-top: 12px;
-    width: auto;
-  }
-  #adminFormControls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-  }
-  #adminExitBtn {
-    margin-left: 12px;
-    background-color: #ff6f00;
-    color: #111;
-    border-color: #ff6f00;
-    border-radius: 12px;
-    padding: 8px 16px;
-  }
-  #adminExitBtn:hover {
-    background-color: #e65c00;
-  }
-  /* 관리자 모드 진입 버튼 우측 상단 고정 */
-  #adminToggleBtn {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 1000;
-  }
-  /* 삭제 버튼 스타일 */
-  .delete-btn {
-    background-color: #aa2222;
-    color: #fff;
-    border-radius: 12px;
-    padding: 6px 12px;
-    border: none;
-    cursor: pointer;
-  }
-  .delete-btn:hover {
-    background-color: #880000;
-  }
-
-  /* 행 클릭시 마우스 커서 */
-  #adminSongsTable tbody tr {
-    cursor: pointer;
-  }
-  /* 모달 배경 */
-  #passwordModalOverlay {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-  }
-  #passwordModal {
-    background: #111;
-    border: 2px solid #ff6f00;
-    border-radius: 12px;
-    padding: 20px 30px;
-    text-align: center;
-    max-width: 320px;
-    width: 90%;
-    box-shadow: 0 0 12px #ff6f00;
-  }
-  #passwordModal input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: none;
-    margin-top: 15px;
-    background: #222;
-    color: #fff;
-    box-sizing: border-box;
-    outline: none;
-    text-align: center;
-  }
-  #passwordModal button {
-    margin-top: 15px;
-    width: 100%;
-    background-color: #ff6f00;
-    border: none;
-    color: #111;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 12px;
-    cursor: pointer;
-  }
-  #passwordModal button:hover {
-    background-color: #e65c00;
-  }
-  #passwordError {
-    margin-top: 10px;
-    color: #ff5555;
-    font-weight: bold;
-    display: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>RIMO’S SONG BOOK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Jua', sans-serif;
+      text-align: center;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #ff6f00;
+      cursor: pointer;
+    }
+    .headlineNotice {
+      font-size: 15px;
+      margin-bottom: 24px;
+      color: #ff6f00;
+    }
+    input[type="text"], select {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 999px;
+      background-color: #111;
+      color: #fff;
+      box-shadow: 0 0 8px #ff6f00;
+      outline: none;
+      text-align: center;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus, select:focus {
+      box-shadow: 0 0 12px #8e44ad;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #111;
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 5px;
+      border: 1px solid #8e44ad;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    button:hover {
+      background-color: #8e44ad;
+    }
+    .orange-btn {
+      border-color: #ff6f00;
+      color: #ff6f00;
+    }
+    .orange-btn:hover {
+      background-color: #ff6f00;
+      color: #111;
+    }
+    .active-btn {
+      background-color: #ff6f00 !important;
+      color: #111 !important;
+      border-color: #ff6f00 !important;
+    }
+    .section {
+      background-color: #111;
+      border: 1px solid #8e44ad;
+      box-shadow: 0 0 8px #8e44ad;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-line;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    table {
+      width: 100%;
+      max-width: 700px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #8e44ad;
+      text-align: center;
+    }
+    th {
+      background-color: #1a1a1a;
+    }
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    tr:nth-child(odd) {
+      background-color: #2a2a2a;
+    }
+    #noResult {
+      display: none;
+      color: #ff6f00;
+      margin-top: 20px;
+      font-size: 15px;
+      text-align: center;
+    }
+    #categorySelector, #initialButtons, #mainSearch, #topButtons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #adminButton {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 9999;
+    }
+    #adminExitButton {
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    #editFormContainer {
+      max-width: 700px;
+      margin: 20px auto;
+      text-align: center;
+    }
+    #editFormContainer form > * {
+      margin-bottom: 10px;
+    }
+    #editFormButtons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    /* 숨김 클래스 */
+    .hidden {
+      display: none !important;
+    }
+    /* Modal */
+    #passwordModal {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #passwordModal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    #passwordModalContent {
+      background: #111;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 300px;
+      box-sizing: border-box;
+      box-shadow: 0 0 20px #ff6f00;
+    }
+    #passwordInput {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      margin-top: 15px;
+      box-sizing: border-box;
+      text-align: center;
+      background: #222;
+      color: #fff;
+    }
+    #passwordError {
+      color: #ff6f00;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
+  <h1 id="title" onclick="showSection('manual')">RIMO’S SONG BOOK</h1>
 
-<h1 id="title" onclick="showSection('manual')">RIMO’S SONG BOOK</h1>
+  <p class="headlineNotice">📌 노래책 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
 
-<p class="headlineNotice">📌 노래책 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
+  <!-- 관리자 모드 진입 버튼 -->
+  <button id="adminButton" onclick="openPasswordModal()">관리자 모드</button>
 
-<input type="text" id="searchInput" placeholder="가수 / 제목 검색" oninput="handleSearch()" style="display:none;" />
-
-<div>
-  <button onclick="showSection('manual')">노래책 설명서</button>
-  <button onclick="showSection('price')">가격표</button>
-  <button onclick="showSection('songs')">노래목록</button>
-</div>
-
-<!-- 설명서, 가격표 섹션 -->
-<div id="manual" class="section">
-  • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
-  (코드도 적어주시면 감사합니다!)<br/>
-  • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
-  (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
-  • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
-  • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
-  ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
-</div>
-
-<div id="price" class="section" style="display:none;">
-  • 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
-  • 어려운 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
-  • 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능합니다.<br/>
-  • 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.
-</div>
-
-<!-- 노래 목록 섹션 -->
-<div id="songs" class="section" style="display:none; text-align:center;">
-  <!-- 카테고리 선택 버튼 -->
-  <div id="categorySelector">
-    <button class="orange-btn active-btn" onclick="selectCategory('전체')" id="cat-btn-전체">전체</button>
-    <button class="orange-btn" onclick="selectCategory('Kpop')" id="cat-btn-Kpop">K-pop</button>
-    <button class="orange-btn" onclick="selectCategory('Kpop 아이돌')" id="cat-btn-Kpop 아이돌">K-pop 아이돌</button>
-    <button class="orange-btn" onclick="selectCategory('Pop')" id="cat-btn-Pop">Pop</button>
-  </div>
-
-  <!-- 이니셜 버튼 -->
-  <div id="initialButtons" style="margin-top: 15px;"></div>
-</div>
-
-<!-- 노래 테이블 -->
-<table id="songTable" style="display:none;">
-  <thead>
-    <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
-  </thead>
-  <tbody id="songList"></tbody>
-</table>
-
-<p id="noResult">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
-
-<!-- 관리자 모드 진입 버튼 (우측 상단 고정) -->
-<button id="adminToggleBtn" onclick="openPasswordModal()">관리자 모드</button>
-
-<!-- 관리자 모드 섹션 -->
-<div id="adminSection">
-  <h2>관리자 모드 - 노래 수정 및 추가</h2>
-
-  <!-- 관리자 검색창 -->
-  <input type="text" id="adminSearchInput" placeholder="가수 또는 제목 검색" oninput="filterAdminSongs()" style="margin-bottom: 15px;" />
-
-  <form id="adminForm" onsubmit="event.preventDefault(); addOrUpdateSong();">
-    <label for="adminCategory">카테고리</label>
-    <select id="adminCategory" required>
-      <option value="Kpop">Kpop</option>
-      <option value="Kpop 아이돌">Kpop 아이돌</option>
-      <option value="Pop">Pop</option>
-    </select>
-
-    <label for="adminInitial">초성 (한글 또는 영문 대문자)</label>
-    <select id="adminInitial" required></select>
-
-    <label for="adminSinger">가수</label>
-    <input type="text" id="adminSinger" required />
-
-    <label for="adminTitle">제목</label>
-    <input type="text" id="adminTitle" required />
-
-    <label for="adminKey">코드</label>
-    <input type="text" id="adminKey" />
-
-    <label for="adminDifficulty">난이도</label>
-    <input type="text" id="adminDifficulty" />
-
-    <label for="adminSkill">숙련도</label>
-    <input type="text" id="adminSkill" />
-
-    <div id="adminFormControls">
-      <button type="submit">추가 / 수정 저장</button>
-      <button type="button" id="adminExitBtn" onclick="toggleAdminMode()">관리자 모드 종료</button>
+  <!-- 기본 영역 (설명서, 가격표, 노래목록 필터/검색 등) -->
+  <div id="topArea">
+    <div id="topButtons">
+      <button onclick="showSection('manual')">노래책 설명서</button>
+      <button onclick="showSection('price')">가격표</button>
+      <button onclick="showSection('songs')">노래목록</button>
     </div>
-  </form>
 
-  <table id="adminSongsTable">
-    <thead>
-      <tr><th>카테고리</th><th>초성</th><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th><th>삭제</th></tr>
-    </thead>
-    <tbody id="adminSongList"></tbody>
-  </table>
-</div>
+    <input type="text" id="mainSearch" placeholder="가수 / 제목 검색" oninput="handleSearch()" />
 
-<!-- 비밀번호 입력 모달 -->
-<div id="passwordModalOverlay">
-  <div id="passwordModal">
-    <h3>관리자 비밀번호 입력</h3>
-    <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력" autofocus />
-    <button onclick="checkPassword()">확인</button>
-    <p id="passwordError">비밀번호가 틀렸습니다.</p>
+    <div id="categorySelector">
+      <button class="orange-btn active-btn" onclick="selectCategory('전체')" id="cat-btn-전체">전체</button>
+      <button class="orange-btn" onclick="selectCategory('Kpop')" id="cat-btn-Kpop">K-pop</button>
+      <button class="orange-btn" onclick="selectCategory('Kpop 아이돌')" id="cat-btn-Kpop 아이돌">K-pop 아이돌</button>
+      <button class="orange-btn" onclick="selectCategory('Pop')" id="cat-btn-Pop">Pop</button>
+    </div>
+
+    <select id="initialSelect" style="margin-top: 10px; max-width: 700px;">
+      <option value="전체">전체</option>
+      <option>ㄱ</option><option>ㄴ</option><option>ㄷ</option><option>ㄹ</option>
+      <option>ㅁ</option><option>ㅂ</option><option>ㅅ</option><option>ㅇ</option>
+      <option>ㅈ</option><option>ㅊ</option><option>ㅋ</option><option>ㅌ</option>
+      <option>ㅍ</option><option>ㅎ</option>
+      <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option>
+      <option>F</option><option>G</option><option>H</option><option>I</option><option>J</option>
+      <option>K</option><option>L</option><option>M</option><option>N</option><option>O</option>
+      <option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option>
+      <option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option>
+    </select>
   </div>
-</div>
+
+  <!-- 섹션들 -->
+  <div id="manual" class="section" style="display:none;">
+    • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
+    (코드도 적어주시면 감사합니다!)<br/>
+    • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
+    (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
+    • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
+    • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
+    ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
+  </div>
+
+  <div id="price" class="section" style="display:none;">
+    • 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
+    • 어려운 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
+    • 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능합니다.<br/>
+    • 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.
+  </div>
+
+  <!-- 노래 목록 섹션 -->
+  <div id="songs" class="section" style="display:none; text-align:center;">
+    <table id="songTable">
+      <thead>
+        <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
+      </thead>
+      <tbody id="songList"></tbody>
+    </table>
+
+    <p id="noResult">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
+  </div>
+
+  <!-- 관리자 수정 폼 -->
+  <div id="editFormContainer" style="display:none;">
+    <form id="editForm" onsubmit="return false;">
+      <input type="hidden" id="editIndex" />
+      <input type="text" id="editCategory" placeholder="카테고리 (Kpop, Kpop 아이돌, Pop)" required />
+      <input type="text" id="editInitial" placeholder="초성 또는 영어 대문자" required maxlength="1" />
+      <input type="text" id="editSinger" placeholder="가수" required />
+      <input type="text" id="editTitle" placeholder="곡 제목" required />
+      <input type="text" id="editKey" placeholder="코드" />
+      <input type="text" id="editDifficulty" placeholder="난이도" />
+      <input type="text" id="editSkill" placeholder="숙련도" />
+    </form>
+    <div id="editFormButtons">
+      <button onclick="saveEdit()">수정 및 저장</button>
+      <button id="adminExitButton" onclick="exitAdminMode()">관리자 모드 종료</button>
+    </div>
+  </div>
+
+  <!-- 비밀번호 모달 -->
+  <div id="passwordModal">
+    <div id="passwordModalContent">
+      <h3>관리자 비밀번호를 입력하세요</h3>
+      <input type="password" id="passwordInput" />
+      <div id="passwordError"></div>
+      <button onclick="checkPassword()">확인</button>
+      <button onclick="closePasswordModal()">취소</button>
+    </div>
+  </div>
 
 <script>
-  // 노래 데이터 초기
-  let songs = [
+  const songs = [
     {category:'Kpop 아이돌', initial:'ㅋ', singer:'큐더블유이알(QWER)', title:'가짜아이돌', key:'Fm', difficulty:'', skill:'완벽 카피X'},
     {category:'Kpop', initial:'ㅇ', singer:'아이유', title:'밤편지', key:'C', difficulty:'하', skill:'상'},
     {category:'Pop', initial:'A', singer:'Adele', title:'Hello', key:'Am', difficulty:'상', skill:'상'},
@@ -387,76 +308,52 @@
     {category:'Kpop 아이돌', initial:'ㅂ', singer:'방탄소년단', title:'Dynamite', key:'G', difficulty:'중', skill:'중'},
   ];
 
-  // 상태값
   let currentCategory = '전체';
   let currentInitial = '전체';
   let adminMode = false;
-  let editingIndex = -1;
 
-  // DOM 요소
   const songTable = document.getElementById("songTable");
   const songList = document.getElementById("songList");
   const noResult = document.getElementById("noResult");
-  const initialButtonsDiv = document.getElementById("initialButtons");
   const categorySelector = document.getElementById("categorySelector");
-  const searchInput = document.getElementById("searchInput");
-
-  const adminSection = document.getElementById("adminSection");
-  const adminSearchInput = document.getElementById("adminSearchInput");
-  const adminCategory = document.getElementById("adminCategory");
-  const adminInitial = document.getElementById("adminInitial");
-  const adminSinger = document.getElementById("adminSinger");
-  const adminTitle = document.getElementById("adminTitle");
-  const adminKey = document.getElementById("adminKey");
-  const adminDifficulty = document.getElementById("adminDifficulty");
-  const adminSkill = document.getElementById("adminSkill");
-  const adminSongList = document.getElementById("adminSongList");
-
-  const adminToggleBtn = document.getElementById("adminToggleBtn");
-
-  // 비밀번호 모달 관련
-  const passwordModalOverlay = document.getElementById("passwordModalOverlay");
-  const adminPasswordInput = document.getElementById("adminPasswordInput");
+  const initialSelect = document.getElementById("initialSelect");
+  const searchInput = document.getElementById("mainSearch");
+  const topArea = document.getElementById("topArea");
+  const manualSection = document.getElementById("manual");
+  const priceSection = document.getElementById("price");
+  const songsSection = document.getElementById("songs");
+  const editFormContainer = document.getElementById("editFormContainer");
+  const adminButton = document.getElementById("adminButton");
+  const passwordModal = document.getElementById("passwordModal");
+  const passwordInput = document.getElementById("passwordInput");
   const passwordError = document.getElementById("passwordError");
-  const ADMIN_PASSWORD = "admin123"; // 기본 비밀번호, 필요시 변경 가능
+  const titleH1 = document.getElementById("title");
+  const headlineNotice = document.querySelector(".headlineNotice");
 
-  // 한글 초성 리스트 전체 (기타 제외)
-  const allChosung = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-  // 영어 알파벳 대문자 A~Z
-  const allAlpha = Array.from(Array(26)).map((_,i)=>String.fromCharCode(65+i));
+  // 초기화: 설명서 보이기
+  showSection('manual');
 
-  // =============== 초기 함수 실행 ===============
-  showSection('manual'); // 기본 설명서 보여주기
-  generateInitialButtons();
-  populateAdminInitialSelect();
-
-  // =================== 노래책 메인 ===================
+  // 노래 목록 선택 함수
   function showSection(sectionId) {
-    ['manual','price','songs'].forEach(id => {
-      document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
-    });
-    if(sectionId === 'songs') {
-      searchInput.style.display = 'block';
-      categorySelector.style.display = 'flex';
-      initialButtonsDiv.style.display = 'flex';
-      songTable.style.display = 'none';
-      noResult.style.display = 'none';
-
-      // 초기화
-      currentCategory = '전체';
-      currentInitial = '전체';
-      updateCategoryButtons();
-      updateInitialButtons();
-      filterAndRenderSongs();
-    } else {
-      searchInput.style.display = 'none';
-      categorySelector.style.display = 'none';
-      initialButtonsDiv.style.display = 'none';
-      songTable.style.display = 'none';
-      noResult.style.display = 'none';
-    }
+    manualSection.style.display = 'none';
+    priceSection.style.display = 'none';
+    songsSection.style.display = 'none';
+    if(sectionId === 'manual') manualSection.style.display = 'block';
+    else if(sectionId === 'price') priceSection.style.display = 'block';
+    else if(sectionId === 'songs') songsSection.style.display = 'block';
   }
 
+  // 카테고리 버튼 클릭
+  function selectCategory(cat) {
+    currentCategory = cat;
+    currentInitial = '전체';
+    initialSelect.value = '전체';
+    searchInput.value = '';
+    updateCategoryButtons();
+    filterAndRenderSongs();
+  }
+
+  // 카테고리 버튼 상태 업데이트
   function updateCategoryButtons() {
     ['전체','Kpop','Kpop 아이돌','Pop'].forEach(cat => {
       const btn = document.getElementById(`cat-btn-${cat}`);
@@ -464,280 +361,174 @@
     });
   }
 
-  // 이니셜 버튼 생성
-  function generateInitialButtons() {
-    initialButtonsDiv.innerHTML = '';
+  // 초기값: 카테고리 전체 버튼 활성화
+  updateCategoryButtons();
 
-    const allBtn = document.createElement('button');
-    allBtn.textContent = '전체';
-    allBtn.className = 'orange-btn';
-    if(currentInitial === '전체') allBtn.classList.add('active-btn');
-    allBtn.onclick = () => {
-      currentInitial = '전체';
-      updateInitialButtons();
-      filterAndRenderSongs();
-    };
-    initialButtonsDiv.appendChild(allBtn);
-
-    allChosung.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.textContent = ch;
-      btn.className = 'orange-btn';
-      if(currentInitial === ch) btn.classList.add('active-btn');
-      btn.onclick = () => {
-        currentInitial = ch;
-        updateInitialButtons();
-        filterAndRenderSongs();
-      };
-      initialButtonsDiv.appendChild(btn);
-    });
-
-    allAlpha.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.textContent = ch;
-      btn.className = 'orange-btn';
-      if(currentInitial === ch) btn.classList.add('active-btn');
-      btn.onclick = () => {
-        currentInitial = ch;
-        updateInitialButtons();
-        filterAndRenderSongs();
-      };
-      initialButtonsDiv.appendChild(btn);
-    });
-  }
-
-  function updateInitialButtons() {
-    Array.from(initialButtonsDiv.children).forEach(btn => {
-      btn.classList.toggle('active-btn', btn.textContent === currentInitial);
-    });
-  }
-
-  // 카테고리 선택
-  function selectCategory(cat) {
-    currentCategory = cat;
-    updateCategoryButtons();
-    generateInitialButtons();
-    currentInitial = '전체';
-    updateInitialButtons();
+  // 검색창 입력 시 필터링
+  searchInput.addEventListener('input', () => {
     filterAndRenderSongs();
-  }
+  });
 
-  // 필터링 및 렌더링
+  // 초기 이니셜 선택 변경 시
+  initialSelect.addEventListener('change', () => {
+    currentInitial = initialSelect.value;
+    filterAndRenderSongs();
+  });
+
+  // 노래 필터링 및 렌더링
   function filterAndRenderSongs() {
-    let keyword = searchInput.value.trim().toLowerCase();
-    let filtered = songs.filter(song => {
-      if(currentCategory !== '전체' && song.category !== currentCategory) return false;
-      if(currentInitial !== '전체' && song.initial !== currentInitial) return false;
-      if(keyword !== '') {
-        const match = song.singer.toLowerCase().includes(keyword) || song.title.toLowerCase().includes(keyword);
-        if(!match) return false;
-      }
-      return true;
-    });
+    let filtered = songs;
 
-    if(filtered.length === 0) {
-      songTable.style.display = 'none';
-      noResult.style.display = 'block';
-    } else {
-      noResult.style.display = 'none';
-      songTable.style.display = 'table';
-      renderSongTable(filtered);
+    if(currentCategory !== '전체') {
+      filtered = filtered.filter(s => s.category === currentCategory);
     }
-  }
-
-  function renderSongTable(list) {
-    songList.innerHTML = '';
-    list.forEach(song => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${song.singer}</td><td>${song.title}</td><td>${song.key}</td><td>${song.difficulty}</td><td>${song.skill}</td>`;
-      songList.appendChild(tr);
-    });
-  }
-
-  function handleSearch() {
-    filterAndRenderSongs();
-  }
-
-  // =================== 관리자 모드 ===================
-
-  // 모달 열기
-  function openPasswordModal() {
-    adminPasswordInput.value = '';
-    passwordError.style.display = 'none';
-    passwordModalOverlay.style.display = 'flex';
-    adminPasswordInput.focus();
-  }
-
-  // 비밀번호 확인
-  function checkPassword() {
-    const input = adminPasswordInput.value;
-    if(input === ADMIN_PASSWORD) {
-      passwordModalOverlay.style.display = 'none';
-      toggleAdminMode(true);
-    } else {
-      passwordError.style.display = 'block';
-      adminPasswordInput.focus();
+    if(currentInitial !== '전체') {
+      filtered = filtered.filter(s => s.initial === currentInitial);
     }
-  }
 
-  // 관리자 모드 토글
-  function toggleAdminMode(forceOn = null) {
-    if(forceOn === true || (forceOn === null && !adminMode)) {
-      adminMode = true;
-      adminSection.style.display = 'block';
-      adminToggleBtn.style.display = 'none';
-      searchInput.style.display = 'block';
-      categorySelector.style.display = 'none';
-      initialButtonsDiv.style.display = 'none';
-      document.querySelector('.headlineNotice').style.display = 'none'; // 설명서/가격표 숨김
-
-      showSection('songs');
-      renderAdminSongTable();
-    } else {
-      adminMode = false;
-      adminSection.style.display = 'none';
-      adminToggleBtn.style.display = 'inline-block';
-      searchInput.style.display = 'block';
-      categorySelector.style.display = 'flex';
-      initialButtonsDiv.style.display = 'flex';
-      document.querySelector('.headlineNotice').style.display = 'block'; // 설명서/가격표 보임
-
-      clearAdminForm();
-      filterAndRenderSongs();
+    // 검색어 필터 추가
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if(searchTerm) {
+      filtered = filtered.filter(s => {
+        return s.singer.toLowerCase().includes(searchTerm) || s.title.toLowerCase().includes(searchTerm);
+      });
     }
+
+    renderSongs(filtered);
   }
 
-  // 관리자 이니셜 select 채우기 (기타 제외)
-  function populateAdminInitialSelect() {
-    adminInitial.innerHTML = '';
-    // 한글 초성
-    allChosung.forEach(ch => {
-      const option = document.createElement('option');
-      option.value = ch;
-      option.textContent = ch;
-      adminInitial.appendChild(option);
-    });
-    // 영어 대문자
-    allAlpha.forEach(ch => {
-      const option = document.createElement('option');
-      option.value = ch;
-      option.textContent = ch;
-      adminInitial.appendChild(option);
-    });
-  }
+  // 노래 테이블 렌더링
+  function renderSongs(list) {
+    songList.innerHTML = "";
+    if (list.length === 0) {
+      songTable.style.display = "none";
+      noResult.style.display = "block";
+      return;
+    }
+    noResult.style.display = "none";
+    songTable.style.display = "table";
 
-  // 관리자 테이블 렌더링
-  function renderAdminSongTable() {
-    adminSongList.innerHTML = '';
-    songs.forEach((song, idx) => {
-      const tr = document.createElement('tr');
-      tr.onclick = () => {
-        fillAdminForm(idx);
-      };
+    list.forEach((song, idx) => {
+      const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${song.category}</td>
-        <td>${song.initial}</td>
         <td>${song.singer}</td>
         <td>${song.title}</td>
         <td>${song.key}</td>
         <td>${song.difficulty}</td>
         <td>${song.skill}</td>
-        <td><button class="delete-btn" onclick="deleteSong(event, ${idx})">삭제</button></td>
       `;
-      adminSongList.appendChild(tr);
-    });
-  }
-
-  // 관리자 검색 필터
-  function filterAdminSongs() {
-    const keyword = adminSearchInput.value.trim().toLowerCase();
-    const trs = adminSongList.children;
-    for(let i = 0; i < trs.length; i++) {
-      const tr = trs[i];
-      const singer = tr.cells[2].textContent.toLowerCase();
-      const title = tr.cells[3].textContent.toLowerCase();
-      if(singer.includes(keyword) || title.includes(keyword)) {
-        tr.style.display = '';
+      if(adminMode){
+        tr.style.cursor = "pointer";
+        tr.onclick = () => openEditForm(idx);
       } else {
-        tr.style.display = 'none';
+        tr.style.cursor = "default";
+        tr.onclick = null;
       }
-    }
-  }
-
-  // 수정 폼에 데이터 채우기
-  function fillAdminForm(index) {
-    editingIndex = index;
-    const s = songs[index];
-    adminCategory.value = s.category;
-    adminInitial.value = s.initial || allChosung[0];
-    adminSinger.value = s.singer;
-    adminTitle.value = s.title;
-    adminKey.value = s.key;
-    adminDifficulty.value = s.difficulty;
-    adminSkill.value = s.skill;
-  }
-
-  // 폼 초기화
-  function clearAdminForm() {
-    editingIndex = -1;
-    adminCategory.value = 'Kpop';
-    adminInitial.value = allChosung[0];
-    adminSinger.value = '';
-    adminTitle.value = '';
-    adminKey.value = '';
-    adminDifficulty.value = '';
-    adminSkill.value = '';
-    adminSearchInput.value = '';
-  }
-
-  // 추가/수정 저장
-  function addOrUpdateSong() {
-    const newSong = {
-      category: adminCategory.value,
-      initial: adminInitial.value,
-      singer: adminSinger.value.trim(),
-      title: adminTitle.value.trim(),
-      key: adminKey.value.trim(),
-      difficulty: adminDifficulty.value.trim(),
-      skill: adminSkill.value.trim()
-    };
-    if(!newSong.singer || !newSong.title) {
-      alert('가수와 제목은 필수 입력입니다.');
-      return;
-    }
-
-    if(editingIndex >= 0) {
-      songs[editingIndex] = newSong;
-    } else {
-      songs.push(newSong);
-    }
-    clearAdminForm();
-    renderAdminSongTable();
-    filterAndRenderSongs();
-    alert('저장 완료');
-  }
-
-  // 삭제
-  function deleteSong(event, idx) {
-    event.stopPropagation();
-    if(confirm('정말 삭제하시겠습니까?')) {
-      songs.splice(idx, 1);
-      renderAdminSongTable();
-      filterAndRenderSongs();
-      clearAdminForm();
-    }
-  }
-
-  // 관리자 모드용 노래 필터 (검색)
-  function filterAdminSongs() {
-    const keyword = adminSearchInput.value.trim().toLowerCase();
-    Array.from(adminSongList.children).forEach(tr => {
-      const singer = tr.cells[2].textContent.toLowerCase();
-      const title = tr.cells[3].textContent.toLowerCase();
-      tr.style.display = (singer.includes(keyword) || title.includes(keyword)) ? '' : 'none';
+      songList.appendChild(tr);
     });
   }
 
+  // 수정 폼 열기
+  function openEditForm(index){
+    const song = songs[index];
+    document.getElementById("editIndex").value = index;
+    document.getElementById("editCategory").value = song.category;
+    document.getElementById("editInitial").value = song.initial;
+    document.getElementById("editSinger").value = song.singer;
+    document.getElementById("editTitle").value = song.title;
+    document.getElementById("editKey").value = song.key;
+    document.getElementById("editDifficulty").value = song.difficulty;
+    document.getElementById("editSkill").value = song.skill;
+
+    editFormContainer.style.display = "block";
+    // 수정 폼이 열릴 때 수정용 검색창 및 기본 필터 영역 숨기기
+    topArea.classList.add('hidden');
+    manualSection.style.display = 'none';
+    priceSection.style.display = 'none';
+    songsSection.style.display = 'block';
+  }
+
+  // 수정 및 저장
+  function saveEdit(){
+    const index = document.getElementById("editIndex").value;
+    if(index === '') return alert("수정할 항목이 선택되지 않았습니다.");
+
+    songs[index] = {
+      category: document.getElementById("editCategory").value.trim(),
+      initial: document.getElementById("editInitial").value.trim(),
+      singer: document.getElementById("editSinger").value.trim(),
+      title: document.getElementById("editTitle").value.trim(),
+      key: document.getElementById("editKey").value.trim(),
+      difficulty: document.getElementById("editDifficulty").value.trim(),
+      skill: document.getElementById("editSkill").value.trim()
+    };
+    alert("노래 정보가 저장되었습니다.");
+
+    filterAndRenderSongs();
+    clearEditForm();
+  }
+
+  // 수정 폼 초기화 및 숨기기
+  function clearEditForm(){
+    document.getElementById("editForm").reset();
+    document.getElementById("editIndex").value = '';
+    editFormContainer.style.display = "none";
+    // 수정 폼 닫히면 기본 필터 영역 다시 보여주기
+    topArea.classList.remove('hidden');
+    if(!adminMode) showSection('manual');
+  }
+
+  // 관리자 모드 시작 시
+  function openPasswordModal(){
+    passwordInput.value = '';
+    passwordError.textContent = '';
+    passwordModal.classList.add('show');
+    passwordInput.focus();
+  }
+  // 관리자 모드 종료
+  function exitAdminMode(){
+    adminMode = false;
+    editFormContainer.style.display = 'none';
+    topArea.classList.remove('hidden');
+    manualSection.style.display = 'block';
+    priceSection.style.display = 'block';
+    songsSection.style.display = 'none';
+    adminButton.style.display = 'block';
+    clearEditForm();
+    updateCategoryButtons();
+    filterAndRenderSongs();
+  }
+  // 비밀번호 확인
+  function checkPassword(){
+    const pw = passwordInput.value;
+    if(pw === "admin123"){ // 기본 비밀번호, 필요하면 변경 가능
+      adminMode = true;
+      passwordModal.classList.remove('show');
+      adminButton.style.display = 'none';
+      topArea.classList.add('hidden');
+      manualSection.style.display = 'none';
+      priceSection.style.display = 'none';
+      songsSection.style.display = 'block';
+      editFormContainer.style.display = 'none'; // 처음엔 안보이게
+      filterAndRenderSongs();
+    } else {
+      passwordError.textContent = "비밀번호가 틀렸습니다.";
+      passwordInput.focus();
+    }
+  }
+  // 모달 닫기
+  function closePasswordModal(){
+    passwordModal.classList.remove('show');
+  }
+
+  // 초기 노래 렌더링
+  filterAndRenderSongs();
+
+  // 검색 및 필터 처리 (관리자 모드에도 작동)
+  function handleSearch(){
+    filterAndRenderSongs();
+  }
 </script>
+
 </body>
 </html>
