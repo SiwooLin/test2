@@ -336,7 +336,6 @@
 
       <label for="adminInitial">초성</label>
       <select id="adminInitial">
-        <!-- 한글 초성 -->
         <option value="ㄱ">ㄱ</option><option value="ㄴ">ㄴ</option><option value="ㄷ">ㄷ</option><option value="ㄹ">ㄹ</option><option value="ㅁ">ㅁ</option>
         <option value="ㅂ">ㅂ</option><option value="ㅅ">ㅅ</option><option value="ㅇ">ㅇ</option><option value="ㅈ">ㅈ</option><option value="ㅊ">ㅊ</option>
         <option value="ㅋ">ㅋ</option><option value="ㅌ">ㅌ</option><option value="ㅍ">ㅍ</option><option value="ㅎ">ㅎ</option>
@@ -380,19 +379,17 @@
     const pwInput = document.getElementById('pwInput');
     const pwErrorMsg = document.getElementById('pwErrorMsg');
 
-    const PASSWORD = '1234'; // 관리자 비밀번호 (필요에 따라 변경)
+    const PASSWORD = '1234'; // 관리자 비밀번호
 
     let isAdmin = false;
 
     adminToggleBtn.addEventListener('click', () => {
       if (!isAdmin) {
-        // 비밀번호 입력 모달 표시
         pwModalOverlay.style.display = 'flex';
         pwInput.value = '';
         pwErrorMsg.textContent = '';
         pwInput.focus();
       } else {
-        // 관리자 모드 해제
         isAdmin = false;
         adminArea.style.display = 'none';
         mainUI.style.display = 'block';
@@ -417,14 +414,12 @@
       }
     }
 
-    // 비밀번호 입력 모달에서 엔터 키로도 제출 가능
     pwInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         submitPassword();
       }
     });
 
-    // 관리자 폼 초기화
     function resetForm() {
       document.getElementById('adminCategory').value = 'Kpop';
       document.getElementById('adminInitial').value = 'ㄱ';
@@ -434,10 +429,26 @@
       document.getElementById('adminSkill').value = '';
     }
 
-    // (관리자 영역 관련 함수들 여기 넣기: addSong, editSong, deleteSong, handleAdminSearch 등)
-    // 노래 데이터는 필요하면 추가 구현해주세요.
-
-    // 섹션 보여주기 (manual, price, songs)
+    // 아래는 각종 함수 틀만 넣어둔 상태입니다.
+    // 필요하면 구현해주세요.
+    function addSong() {
+      alert('추가 기능은 아직 구현되지 않았습니다.');
+    }
+    function editSong() {
+      alert('수정 기능은 아직 구현되지 않았습니다.');
+    }
+    function deleteSong() {
+      alert('삭제 기능은 아직 구현되지 않았습니다.');
+    }
+    function clearForm() {
+      resetForm();
+    }
+    function handleSearch() {
+      // 기본 UI 검색기능 구현 필요 시 여기에 작성
+    }
+    function handleAdminSearch() {
+      // 관리자 검색 기능 구현 필요 시 여기에 작성
+    }
     function showSection(section) {
       ['manual', 'price', 'songs'].forEach(s => {
         document.getElementById(s).style.display = (s === section) ? 'block' : 'none';
@@ -449,9 +460,25 @@
         document.getElementById('searchInput').style.display = 'none';
         document.getElementById('songTable').style.display = 'none';
       }
+      if(section === 'songs') {
+        document.getElementById('searchInput').style.display = 'block';
+        document.getElementById('songTable').style.display = 'table';
+      } else {
+        document.getElementById('searchInput').style.display = 'none';
+        document.getElementById('songTable').style.display = 'none';
+      }
     }
 
-    // 초기에는 설명서 보이게
+    function selectCategory(cat) {
+      // 카테고리 선택 시 처리 (예: 버튼 스타일 변경, 노래 필터링)
+      const buttons = document.querySelectorAll('#categorySelector button');
+      buttons.forEach(btn => {
+        btn.classList.toggle('active-btn', btn.textContent === cat);
+      });
+      // 노래 목록 갱신 필요 시 구현
+    }
+
+    // 초기 화면 설정
     showSection('manual');
   </script>
 </body>
