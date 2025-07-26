@@ -2,48 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>RIMO’S SONG BOOK 관리자 페이지</title>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+  <title>관리자 로그인 + 노래책</title>
   <style>
     body {
       background-color: #111;
       color: #fff;
-      font-family: 'Jua', sans-serif;
-      padding: 30px;
+      font-family: 'Jua', sans-serif, sans-serif;
       max-width: 900px;
       margin: 0 auto;
-    }
-    h1 {
-      color: #ff6f00;
+      padding: 30px;
       text-align: center;
-      margin-bottom: 30px;
-      cursor: default;
     }
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: bold;
-    }
-    input[type=text], select {
-      width: 100%;
+    input, button, select {
       padding: 8px 12px;
-      margin-top: 4px;
+      margin: 8px 0;
       border-radius: 8px;
       border: none;
-      background-color: #222;
-      color: #fff;
-      box-sizing: border-box;
       font-size: 16px;
-    }
-    input[type=text]:focus, select:focus {
-      outline: 2px solid #ff6f00;
     }
     button {
-      margin-top: 20px;
-      padding: 10px 18px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: none;
       background-color: #ff6f00;
       color: #111;
       cursor: pointer;
@@ -52,120 +29,155 @@
     button:hover {
       background-color: #e65c00;
     }
-    button.delete-btn {
-      background-color: #aa2222;
-      color: #fff;
-      margin-left: 10px;
-    }
-    button.delete-btn:hover {
-      background-color: #880000;
+    .hidden {
+      display: none;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 20px;
       font-size: 14px;
-      text-align: center;
       background-color: #222;
-      border-radius: 12px;
-      overflow: hidden;
+      color: #fff;
     }
     th, td {
-      padding: 12px 8px;
       border: 1px solid #444;
-      word-break: break-word;
+      padding: 8px;
     }
     th {
       background-color: #333;
       color: #ff6f00;
     }
     tr:hover {
-      background-color: #333;
-      cursor: pointer;
+      background-color: #444;
     }
-    .info-text {
-      font-size: 13px;
-      color: #ccc;
-      margin-top: 4px;
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
 
-  <h1>RIMO’S SONG BOOK 관리자 페이지</h1>
+  <h1>RIMO'S SONG BOOK</h1>
 
-  <form id="songForm">
-    <label for="category">카테고리</label>
-    <select id="category" required>
-      <option value="">-- 선택하세요 --</option>
-      <option value="Kpop">K-pop</option>
-      <option value="Kpop 아이돌">K-pop 아이돌</option>
-      <option value="Pop">Pop</option>
-      <option value="기타">기타</option>
-    </select>
+  <div id="loginSection">
+    <p>관리자 모드 진입을 원하시면 비밀번호를 입력하세요.</p>
+    <input type="password" id="passwordInput" placeholder="비밀번호 입력" />
+    <br/>
+    <button onclick="checkPassword()">로그인</button>
+    <p id="loginMsg" style="color: #f66;"></p>
+  </div>
 
-    <label for="initial">이니셜 (첫 글자)</label>
-    <select id="initial" required>
-      <option value="">-- 선택하세요 --</option>
-      <option>ㄱ</option><option>ㄴ</option><option>ㄷ</option><option>ㄹ</option>
-      <option>ㅁ</option><option>ㅂ</option><option>ㅅ</option><option>ㅇ</option>
-      <option>ㅈ</option><option>ㅊ</option><option>ㅋ</option><option>ㅌ</option>
-      <option>ㅍ</option><option>ㅎ</option>
-      <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option>
-      <option>F</option><option>G</option><option>H</option><option>I</option><option>J</option>
-      <option>K</option><option>L</option><option>M</option><option>N</option><option>O</option>
-      <option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option>
-      <option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option>
-    </select>
+  <div id="adminSection" class="hidden">
+    <h2>관리자 페이지</h2>
 
-    <label for="singer">가수 이름</label>
-    <input type="text" id="singer" placeholder="예: 아이유" required />
+    <form id="songForm">
+      <label for="category">카테고리</label>
+      <select id="category" required>
+        <option value="">-- 선택하세요 --</option>
+        <option value="Kpop">K-pop</option>
+        <option value="Kpop 아이돌">K-pop 아이돌</option>
+        <option value="Pop">Pop</option>
+        <option value="기타">기타</option>
+      </select>
 
-    <label for="title">노래 제목</label>
-    <input type="text" id="titleInput" placeholder="예: 밤편지" required />
+      <label for="initial">이니셜 (첫 글자)</label>
+      <select id="initial" required>
+        <option value="">-- 선택하세요 --</option>
+        <option>ㄱ</option><option>ㄴ</option><option>ㄷ</option><option>ㄹ</option>
+        <option>ㅁ</option><option>ㅂ</option><option>ㅅ</option><option>ㅇ</option>
+        <option>ㅈ</option><option>ㅊ</option><option>ㅋ</option><option>ㅌ</option>
+        <option>ㅍ</option><option>ㅎ</option>
+        <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option>
+        <option>F</option><option>G</option><option>H</option><option>I</option><option>J</option>
+        <option>K</option><option>L</option><option>M</option><option>N</option><option>O</option>
+        <option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option>
+        <option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option>
+      </select>
 
-    <label for="key">코드</label>
-    <input type="text" id="key" placeholder="예: C, Am, G 등" />
+      <label for="singer">가수 이름</label>
+      <input type="text" id="singer" placeholder="예: 아이유" required />
 
-    <label for="difficulty">난이도</label>
-    <input type="text" id="difficulty" placeholder="예: 하, 중, 상" />
+      <label for="title">노래 제목</label>
+      <input type="text" id="titleInput" placeholder="예: 밤편지" required />
 
-    <label for="skill">숙련도</label>
-    <input type="text" id="skill" placeholder="예: 상, 중, 하" />
+      <label for="key">코드</label>
+      <input type="text" id="key" placeholder="예: C, Am, G 등" />
 
-    <button type="submit" id="saveBtn">추가하기</button>
-    <button type="button" id="deleteBtn" class="delete-btn" style="display:none;">삭제하기</button>
-  </form>
+      <label for="difficulty">난이도</label>
+      <input type="text" id="difficulty" placeholder="예: 하, 중, 상" />
 
-  <table id="songsTable">
-    <thead>
-      <tr>
-        <th>카테고리</th>
-        <th>이니셜</th>
-        <th>가수</th>
-        <th>제목</th>
-        <th>코드</th>
-        <th>난이도</th>
-        <th>숙련도</th>
-      </tr>
-    </thead>
-    <tbody id="songsBody">
-      <!-- 노래 목록이 여기 표시됩니다 -->
-    </tbody>
-  </table>
+      <label for="skill">숙련도</label>
+      <input type="text" id="skill" placeholder="예: 상, 중, 하" />
+
+      <button type="submit" id="saveBtn">추가하기</button>
+      <button type="button" id="deleteBtn" style="display:none; background-color:#aa2222; color:#fff;">삭제하기</button>
+    </form>
+
+    <table id="songsTable">
+      <thead>
+        <tr>
+          <th>카테고리</th>
+          <th>이니셜</th>
+          <th>가수</th>
+          <th>제목</th>
+          <th>코드</th>
+          <th>난이도</th>
+          <th>숙련도</th>
+        </tr>
+      </thead>
+      <tbody id="songsBody"></tbody>
+    </table>
+
+    <button onclick="logout()" style="margin-top:20px;">관리자 모드 종료</button>
+  </div>
 
   <script>
-    // 초기 데이터
-    let songs = [
-      {category:'Kpop 아이돌', initial:'ㅋ', singer:'큐더블유이알(QWER)', title:'가짜아이돌', key:'Fm', difficulty:'', skill:'완벽 카피X'},
-      {category:'Kpop', initial:'ㅇ', singer:'아이유', title:'밤편지', key:'C', difficulty:'하', skill:'상'},
-      {category:'Pop', initial:'A', singer:'Adele', title:'Hello', key:'Am', difficulty:'상', skill:'상'},
-      {category:'Kpop 아이돌', initial:'ㅇ', singer:'오마이걸', title:'Dun Dun Dance', key:'E', difficulty:'중', skill:'중'},
-      {category:'Kpop', initial:'ㄴ', singer:'뉴진스', title:'Hype Boy', key:'D', difficulty:'중', skill:'중'},
-      {category:'Kpop 아이돌', initial:'ㅂ', singer:'방탄소년단', title:'Dynamite', key:'G', difficulty:'중', skill:'중'}
-    ];
+    // 간단 XOR + Base64 난독화된 비밀번호 (원문: '123')
+    const key = 'mysecret';
+    const encryptedBase64 = 'FhgZFRUY'; // '123' XOR 암호화 후 Base64 인코딩
 
-    // 현재 편집중인 노래 인덱스 (-1은 새로 추가)
+    function xorEncryptDecrypt(input, key) {
+      let output = '';
+      for(let i=0; i < input.length; i++) {
+        output += String.fromCharCode(input.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      return output;
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      if(!input) {
+        showLoginMsg('비밀번호를 입력해주세요.');
+        return;
+      }
+      try {
+        const decrypted = xorEncryptDecrypt(atob(encryptedBase64), key);
+        if(input === decrypted) {
+          // 로그인 성공
+          document.getElementById('loginSection').classList.add('hidden');
+          document.getElementById('adminSection').classList.remove('hidden');
+          clearLoginMsg();
+          loadSongs();
+        } else {
+          showLoginMsg('비밀번호가 틀렸습니다.');
+        }
+      } catch(e) {
+        showLoginMsg('비밀번호 확인 중 오류가 발생했습니다.');
+      }
+    }
+
+    function showLoginMsg(msg) {
+      document.getElementById('loginMsg').textContent = msg;
+    }
+    function clearLoginMsg() {
+      document.getElementById('loginMsg').textContent = '';
+    }
+
+    // 데이터 저장 (로컬 스토리지 사용)
+    let songs = JSON.parse(localStorage.getItem('rimoSongs') || '[]');
     let editingIndex = -1;
 
     const form = document.getElementById('songForm');
@@ -176,12 +188,14 @@
     const keyEl = document.getElementById('key');
     const difficultyEl = document.getElementById('difficulty');
     const skillEl = document.getElementById('skill');
-
     const saveBtn = document.getElementById('saveBtn');
     const deleteBtn = document.getElementById('deleteBtn');
     const tbody = document.getElementById('songsBody');
 
-    // 테이블에 노래 목록 렌더링
+    function saveSongs() {
+      localStorage.setItem('rimoSongs', JSON.stringify(songs));
+    }
+
     function renderTable() {
       tbody.innerHTML = '';
       songs.forEach((song, idx) => {
@@ -195,14 +209,11 @@
           <td>${song.difficulty}</td>
           <td>${song.skill}</td>
         `;
-        tr.addEventListener('click', () => {
-          loadSongToForm(idx);
-        });
+        tr.addEventListener('click', () => loadSongToForm(idx));
         tbody.appendChild(tr);
       });
     }
 
-    // 폼에 노래 정보 로드 (수정용)
     function loadSongToForm(idx) {
       const song = songs[idx];
       categoryEl.value = song.category;
@@ -218,7 +229,6 @@
       deleteBtn.style.display = 'inline-block';
     }
 
-    // 폼 초기화
     function resetForm() {
       form.reset();
       editingIndex = -1;
@@ -226,11 +236,9 @@
       deleteBtn.style.display = 'none';
     }
 
-    // 저장 또는 수정 처리
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', e => {
       e.preventDefault();
 
-      // 유효성 검사 (기본 선택 필수만)
       if (!categoryEl.value || !initialEl.value || !singerEl.value.trim() || !titleEl.value.trim()) {
         alert('카테고리, 이니셜, 가수, 제목은 반드시 입력해야 합니다.');
         return;
@@ -247,33 +255,36 @@
       };
 
       if (editingIndex === -1) {
-        // 새 노래 추가
         songs.push(newSong);
         alert('노래가 추가되었습니다.');
       } else {
-        // 기존 노래 수정
         songs[editingIndex] = newSong;
         alert('노래 정보가 수정되었습니다.');
       }
 
+      saveSongs();
       renderTable();
       resetForm();
     });
 
-    // 삭제 버튼 처리
     deleteBtn.addEventListener('click', () => {
       if (editingIndex === -1) return;
       if (confirm('정말 이 노래를 삭제하시겠습니까?')) {
         songs.splice(editingIndex, 1);
-        alert('노래가 삭제되었습니다.');
+        saveSongs();
         renderTable();
         resetForm();
+        alert('노래가 삭제되었습니다.');
       }
     });
 
-    // 초기 렌더링
-    renderTable();
-  </script>
+    function loadSongs() {
+      renderTable();
+    }
 
-</body>
-</html>
+    function logout() {
+      if(confirm('관리자 모드를 종료하시겠습니까?')) {
+        document.getElementById('adminSection').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+        resetForm();
+        document.getElementById
