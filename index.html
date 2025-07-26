@@ -1124,9 +1124,10 @@
 
   // 관리자 비밀번호 설정
   function decodeAdminPassword(encoded) {
-  return atob(encoded).split('').reverse().join('');
-}
+    return atob(encoded).split('').reverse().join('');
+  }
 
+  const ADMIN_PASSWORD = decodeAdminPassword("MTE5MDAy");
 const ADMIN_PASSWORD = decodeAdminPassword("MTExOTAwMg==");
 
   // 상태 변수
