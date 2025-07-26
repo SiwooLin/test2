@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>RIMO’S SONG BOOK</title>
+  <title>RIMO’S SONG BOOK (Admin Mode)</title>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -85,6 +85,28 @@
       margin-left: auto;
       margin-right: auto;
     }
+    #adminForm {
+      display: none;
+      margin-top: 20px;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px;
+      background: #222;
+      border: 1px dashed #8e44ad;
+      border-radius: 12px;
+    }
+    #adminForm input, #adminForm select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #8e44ad;
+      background: #000;
+      color: #fff;
+      box-sizing: border-box;
+    }
     table {
       width: 100%;
       max-width: 700px;
@@ -105,17 +127,8 @@
     th:not(:last-child) {
       border-right: 1px solid #8e44ad;
     }
-    tbody td {
-      border-top: none;
-      border-bottom: none;
-      border-left: none;
-      border-right: none;
-    }
     tbody td:not(:last-child) {
       border-right: 1px dotted #8e44ad;
-    }
-    tbody tr {
-      border-top: none;
     }
     tbody tr:nth-child(even) {
       background-color: #1a1a1a;
@@ -130,50 +143,21 @@
       font-size: 15px;
       text-align: center;
     }
-    #categorySelector {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #initialButtons {
-      max-width: 700px;
-      margin: 15px auto 0 auto;
-      display: block;
-      user-select: none;
-    }
-    .initial-row {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
   </style>
 </head>
 <body>
-  <h1 id="title" onclick="showSection('manual')">RIMO’S SONG BOOK</h1>
-
+  <h1 onclick="toggleSection('manual')">RIMO’S SONG BOOK (Admin)</h1>
   <p class="headlineNotice">📌 노래책 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
-
-  <input type="text" id="searchInput" placeholder="가수 / 제목 검색" oninput="handleSearch()" style="display:none;"/>
-
   <div>
-    <button onclick="showSection('manual')">노래책 설명서</button>
-    <button onclick="showSection('price')">가격표</button>
-    <button onclick="showSection('songs')">노래목록</button>
+    <button onclick="toggleSection('manual')">노래책 설명서</button>
+    <button onclick="toggleSection('price')">가격표</button>
+    <button onclick="toggleSection('songs')">노래 목록</button>
+    <button onclick="toggleAdmin()">관리자모드</button>
   </div>
 
   <div id="manual" class="section" style="display:none;">
-    • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
-    (코드도 적어주시면 감사합니다!)<br/>
-    • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
-    (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
+    • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요. (코드도 적어주시면 감사합니다!)<br/>
+    • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다. (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
     • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
     • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
     ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
@@ -186,218 +170,96 @@
     • 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.
   </div>
 
-  <div id="songs" class="section" style="display:none; text-align:center;">
-    <div id="categorySelector">
-      <button class="active-btn" onclick="selectCategory('전체')" id="cat-btn-전체">전체</button>
-      <button onclick="selectCategory('Kpop')" id="cat-btn-Kpop">K-pop</button>
-      <button onclick="selectCategory('Kpop 아이돌')" id="cat-btn-Kpop 아이돌">K-pop 아이돌</button>
-      <button onclick="selectCategory('Pop')" id="cat-btn-Pop">Pop</button>
-    </div>
-
-    <div id="initialButtons"></div>
+  <div id="songs" class="section" style="display:none;">
+    <input type="text" id="searchInput" placeholder="가수 / 제목 검색" oninput="filterSongs()">
+    <table id="songTable">
+      <thead>
+        <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
+      </thead>
+      <tbody id="songList"></tbody>
+    </table>
+    <p id="noResult">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
   </div>
 
-  <table id="songTable">
-    <thead>
-      <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
-    </thead>
-    <tbody id="songList"></tbody>
-  </table>
-
-  <p id="noResult">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
+  <form id="adminForm" onsubmit="addNewSong(event)">
+    <h3>곡 추가 (관리자 전용)</h3>
+    <input id="singer" placeholder="가수" required />
+    <input id="title" placeholder="제목" required />
+    <input id="key" placeholder="코드" />
+    <input id="difficulty" placeholder="난이도" />
+    <input id="skill" placeholder="숙련도" />
+    <input id="category" placeholder="카테고리" required />
+    <input id="initial" placeholder="초성 (ㄱ,ㄴ,A 등)" required />
+    <button type="submit">곡 추가 / 수정</button>
+  </form>
 
 <script>
-  const songs = [
-    {category:'Kpop 아이돌', initial:'ㅋ', singer:'큐더블유이알(QWER)', title:'가짜아이돌', key:'Fm', difficulty:'', skill:'완벽 카피X'},
-    {category:'Kpop', initial:'ㅇ', singer:'아이유', title:'밤편지', key:'C', difficulty:'하', skill:'상'},
-    {category:'Pop', initial:'A', singer:'Adele', title:'Hello', key:'Am', difficulty:'상', skill:'상'},
-    {category:'Kpop 아이돌', initial:'ㅇ', singer:'오마이걸', title:'Dun Dun Dance', key:'E', difficulty:'중', skill:'중'},
-    {category:'Kpop', initial:'ㄴ', singer:'뉴진스', title:'Hype Boy', key:'D', difficulty:'중', skill:'중'},
-    {category:'Kpop 아이돌', initial:'ㅂ', singer:'방탄소년단', title:'Dynamite', key:'G', difficulty:'중', skill:'중'},
-  ];
+let isAdmin = false;
+let songs = [
+  {category:'Kpop 아이돌', initial:'ㅋ', singer:'큐더블유이알(QWER)', title:'가짜아이돌', key:'Fm', difficulty:'', skill:'완벽 카피X'},
+  {category:'Kpop', initial:'ㅇ', singer:'아이유', title:'밤편지', key:'C', difficulty:'하', skill:'상'},
+  {category:'Pop', initial:'A', singer:'Adele', title:'Hello', key:'Am', difficulty:'상', skill:'상'},
+  {category:'Kpop 아이돌', initial:'ㅇ', singer:'오마이걸', title:'Dun Dun Dance', key:'E', difficulty:'중', skill:'중'},
+  {category:'Kpop', initial:'ㄴ', singer:'뉴진스', title:'Hype Boy', key:'D', difficulty:'중', skill:'중'},
+  {category:'Kpop 아이돌', initial:'ㅂ', singer:'방탄소년단', title:'Dynamite', key:'G', difficulty:'중', skill:'중'}
+];
 
-  let currentCategory = '전체';
-  let currentInitial = '전체';
+function toggleSection(id) {
+  ['manual','price','songs'].forEach(sec => {
+    document.getElementById(sec).style.display = (sec === id) ? 'block' : 'none';
+  });
+  document.getElementById('adminForm').style.display = (isAdmin && id === 'songs') ? 'block' : 'none';
+  filterSongs();
+}
 
-  const songTable = document.getElementById("songTable");
-  const songList = document.getElementById("songList");
-  const noResult = document.getElementById("noResult");
-  const initialButtonsDiv = document.getElementById("initialButtons");
-  const categorySelector = document.getElementById("categorySelector");
-  const searchInput = document.getElementById("searchInput");
+function toggleAdmin() {
+  isAdmin = !isAdmin;
+  alert('관리자 모드 ' + (isAdmin ? 'ON' : 'OFF'));
+  document.getElementById('adminForm').style.display = (isAdmin && document.getElementById('songs').style.display === 'block') ? 'block' : 'none';
+}
 
-  // 한글 초성 14개 7개씩 2줄
-  const allChosung = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-  const allChosungLine1 = allChosung.slice(0,7);
-  const allChosungLine2 = allChosung.slice(7);
-
-  const allAlpha = Array.from(Array(26)).map((_,i)=>String.fromCharCode(65+i));
-
-  function showSection(sectionId) {
-    ['manual','price','songs'].forEach(id => {
-      document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
-    });
-
-    if(sectionId === 'songs') {
-      searchInput.style.display = 'block';
-      categorySelector.style.display = 'flex';
-      initialButtonsDiv.style.display = 'block';
-      songTable.style.display = 'none';
-      noResult.style.display = 'none';
-
-      currentCategory = '전체';
-      currentInitial = '전체';
-      searchInput.value = '';
-
-      updateCategoryButtons();
-      generateInitialButtons();
-      filterAndRenderSongs();
-    } else {
-      searchInput.style.display = 'none';
-      categorySelector.style.display = 'none';
-      initialButtonsDiv.style.display = 'none';
-      songTable.style.display = 'none';
-      noResult.style.display = 'none';
-    }
-  }
-
-  function updateCategoryButtons() {
-    ['전체','Kpop','Kpop 아이돌','Pop'].forEach(cat => {
-      const btn = document.getElementById(`cat-btn-${cat}`);
-      if(btn) {
-        if(cat === currentCategory) btn.classList.add('active-btn');
-        else btn.classList.remove('active-btn');
-      }
-    });
-  }
-
-  function selectCategory(cat) {
-    currentCategory = cat;
-    currentInitial = '전체';
-    searchInput.value = '';
-    updateCategoryButtons();
-    generateInitialButtons();
-    filterAndRenderSongs();
-  }
-
-  function generateInitialButtons() {
-    initialButtonsDiv.innerHTML = '';
-
-    // 전체 버튼
-    const allBtn = document.createElement('button');
-    allBtn.textContent = '전체';
-    allBtn.className = currentInitial === '전체' ? 'active-btn' : '';
-    allBtn.onclick = () => {
-      currentInitial = '전체';
-      searchInput.value = '';
-      generateInitialButtons();
-      filterAndRenderSongs();
-    };
-    initialButtonsDiv.appendChild(allBtn);
-
-    // 한글 초성 7개씩 2줄
-    const chosungRow1 = document.createElement('div');
-    chosungRow1.className = 'initial-row';
-    allChosungLine1.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.textContent = ch;
-      btn.className = currentInitial === ch ? 'active-btn' : '';
-      btn.onclick = () => {
-        currentInitial = ch;
-        searchInput.value = '';
-        generateInitialButtons();
-        filterAndRenderSongs();
-      };
-      chosungRow1.appendChild(btn);
-    });
-    initialButtonsDiv.appendChild(chosungRow1);
-
-    const chosungRow2 = document.createElement('div');
-    chosungRow2.className = 'initial-row';
-    allChosungLine2.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.textContent = ch;
-      btn.className = currentInitial === ch ? 'active-btn' : '';
-      btn.onclick = () => {
-        currentInitial = ch;
-        searchInput.value = '';
-        generateInitialButtons();
-        filterAndRenderSongs();
-      };
-      chosungRow2.appendChild(btn);
-    });
-    initialButtonsDiv.appendChild(chosungRow2);
-
-    // 영어 알파벳 3줄 (9,9,8)
-    const alphaLines = [9, 9, 8];
-    let idx = 0;
-    for(let line = 0; line < 3; line++) {
-      const alphaRow = document.createElement('div');
-      alphaRow.className = 'initial-row';
-      for(let i = 0; i < alphaLines[line]; i++) {
-        const ch = allAlpha[idx++];
-        const btn = document.createElement('button');
-        btn.textContent = ch;
-        btn.className = currentInitial === ch ? 'active-btn' : '';
-        btn.onclick = () => {
-          currentInitial = ch;
-          searchInput.value = '';
-          generateInitialButtons();
-          filterAndRenderSongs();
-        };
-        alphaRow.appendChild(btn);
-      }
-      initialButtonsDiv.appendChild(alphaRow);
-    }
-  }
-
-  function filterAndRenderSongs() {
-    let filtered = songs;
-
-    if(currentCategory !== '전체') {
-      filtered = filtered.filter(s => s.category === currentCategory);
-    }
-    if(currentInitial !== '전체') {
-      filtered = filtered.filter(s => s.initial === currentInitial);
-    }
-
-    const searchVal = searchInput.value.trim().toLowerCase();
-    if(searchVal.length > 0) {
-      filtered = filtered.filter(s => 
-        s.singer.toLowerCase().includes(searchVal) || s.title.toLowerCase().includes(searchVal)
-      );
-    }
-
-    if(filtered.length === 0) {
-      songTable.style.display = 'none';
-      noResult.style.display = 'block';
-      noResult.textContent = '검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.';
-      return;
-    }
-
-    noResult.style.display = 'none';
-    songTable.style.display = 'table';
-    songList.innerHTML = '';
-    filtered.forEach(song => {
+function filterSongs() {
+  const val = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = songs.filter(s =>
+    s.singer.toLowerCase().includes(val) ||
+    s.title.toLowerCase().includes(val)
+  );
+  const list = document.getElementById('songList');
+  list.innerHTML = '';
+  if (filtered.length === 0) {
+    document.getElementById('songTable').style.display = 'none';
+    document.getElementById('noResult').style.display = 'block';
+  } else {
+    document.getElementById('songTable').style.display = 'table';
+    document.getElementById('noResult').style.display = 'none';
+    filtered.forEach(s => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${song.singer}</td>
-        <td>${song.title}</td>
-        <td>${song.key}</td>
-        <td>${song.difficulty}</td>
-        <td>${song.skill || ''}</td>
-      `;
-      songList.appendChild(tr);
+      tr.innerHTML = `<td>${s.singer}</td><td>${s.title}</td><td>${s.key}</td><td>${s.difficulty}</td><td>${s.skill}</td>`;
+      list.appendChild(tr);
     });
   }
+}
 
-  function handleSearch() {
-    currentInitial = '전체';
-    generateInitialButtons();
-    filterAndRenderSongs();
-  }
+function addNewSong(e) {
+  e.preventDefault();
+  const s = {
+    singer: document.getElementById('singer').value,
+    title: document.getElementById('title').value,
+    key: document.getElementById('key').value,
+    difficulty: document.getElementById('difficulty').value,
+    skill: document.getElementById('skill').value,
+    category: document.getElementById('category').value,
+    initial: document.getElementById('initial').value
+  };
+  const index = songs.findIndex(song => song.singer === s.singer && song.title === s.title);
+  if (index !== -1) songs[index] = s;
+  else songs.push(s);
+  alert('곡이 저장되었습니다.');
+  filterSongs();
+  e.target.reset();
+}
 
-  showSection('manual');
+toggleSection('manual');
 </script>
 </body>
 </html>
