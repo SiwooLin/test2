@@ -338,4 +338,121 @@
       <select id="adminInitial">
         <!-- 한글 초성 -->
         <option value="ㄱ">ㄱ</option><option value="ㄴ">ㄴ</option><option value="ㄷ">ㄷ</option><option value="ㄹ">ㄹ</option><option value="ㅁ">ㅁ</option>
-        <option value="ㅂ">ㅂ</option><option value="ㅅ">ㅅ</option><option
+        <option value="ㅂ">ㅂ</option><option value="ㅅ">ㅅ</option><option value="ㅇ">ㅇ</option><option value="ㅈ">ㅈ</option><option value="ㅊ">ㅊ</option>
+        <option value="ㅋ">ㅋ</option><option value="ㅌ">ㅌ</option><option value="ㅍ">ㅍ</option><option value="ㅎ">ㅎ</option>
+      </select>
+
+      <label for="adminSinger">가수</label>
+      <input type="text" id="adminSinger" />
+
+      <label for="adminTitle">곡 제목</label>
+      <input type="text" id="adminTitle" />
+
+      <label for="adminKey">코드</label>
+      <input type="text" id="adminKey" />
+
+      <label for="adminSkill">숙련도</label>
+      <input type="text" id="adminSkill" placeholder="1~10 숫자 또는 빈칸" />
+
+      <div id="adminButtons">
+        <button onclick="addSong()">추가</button>
+        <button onclick="editSong()">수정</button>
+        <button onclick="deleteSong()">삭제</button>
+        <button onclick="clearForm()">입력 초기화</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 비밀번호 입력 모달 -->
+  <div id="pwModalOverlay">
+    <div id="pwModal">
+      <div id="pwErrorMsg"></div>
+      <input type="password" id="pwInput" placeholder="비밀번호 입력" />
+      <button onclick="submitPassword()">확인</button>
+    </div>
+  </div>
+
+  <script>
+    const adminToggleBtn = document.getElementById('adminToggleBtn');
+    const adminArea = document.getElementById('adminArea');
+    const mainUI = document.getElementById('mainUI');
+    const pwModalOverlay = document.getElementById('pwModalOverlay');
+    const pwInput = document.getElementById('pwInput');
+    const pwErrorMsg = document.getElementById('pwErrorMsg');
+
+    const PASSWORD = '1234'; // 관리자 비밀번호 (필요에 따라 변경)
+
+    let isAdmin = false;
+
+    adminToggleBtn.addEventListener('click', () => {
+      if (!isAdmin) {
+        // 비밀번호 입력 모달 표시
+        pwModalOverlay.style.display = 'flex';
+        pwInput.value = '';
+        pwErrorMsg.textContent = '';
+        pwInput.focus();
+      } else {
+        // 관리자 모드 해제
+        isAdmin = false;
+        adminArea.style.display = 'none';
+        mainUI.style.display = 'block';
+        adminToggleBtn.textContent = '관리자 모드';
+        resetForm();
+      }
+    });
+
+    function submitPassword() {
+      if (pwInput.value === PASSWORD) {
+        isAdmin = true;
+        pwModalOverlay.style.display = 'none';
+        adminArea.style.display = 'block';
+        mainUI.style.display = 'none';
+        adminToggleBtn.textContent = '관리자 모드 해제';
+        pwInput.value = '';
+        pwErrorMsg.textContent = '';
+      } else {
+        pwErrorMsg.textContent = '비밀번호가 올바르지 않습니다.';
+        pwInput.value = '';
+        pwInput.focus();
+      }
+    }
+
+    // 비밀번호 입력 모달에서 엔터 키로도 제출 가능
+    pwInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitPassword();
+      }
+    });
+
+    // 관리자 폼 초기화
+    function resetForm() {
+      document.getElementById('adminCategory').value = 'Kpop';
+      document.getElementById('adminInitial').value = 'ㄱ';
+      document.getElementById('adminSinger').value = '';
+      document.getElementById('adminTitle').value = '';
+      document.getElementById('adminKey').value = '';
+      document.getElementById('adminSkill').value = '';
+    }
+
+    // (관리자 영역 관련 함수들 여기 넣기: addSong, editSong, deleteSong, handleAdminSearch 등)
+    // 노래 데이터는 필요하면 추가 구현해주세요.
+
+    // 섹션 보여주기 (manual, price, songs)
+    function showSection(section) {
+      ['manual', 'price', 'songs'].forEach(s => {
+        document.getElementById(s).style.display = (s === section) ? 'block' : 'none';
+      });
+      if(section === 'songs') {
+        document.getElementById('searchInput').style.display = 'block';
+        document.getElementById('songTable').style.display = 'table';
+      } else {
+        document.getElementById('searchInput').style.display = 'none';
+        document.getElementById('songTable').style.display = 'none';
+      }
+    }
+
+    // 초기에는 설명서 보이게
+    showSection('manual');
+  </script>
+</body>
+</html>
