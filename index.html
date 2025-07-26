@@ -1,485 +1,278 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>RIMO’S SONG BOOK</title>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      background-color: #000;
-      color: #fff;
-      font-family: 'Jua', sans-serif;
-      text-align: center;
-      padding: 40px;
-      box-sizing: border-box;
-      min-height: 100vh;
-      position: relative;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-      color: #ff6f00;
-      cursor: pointer;
-    }
-    .headlineNotice {
-      font-size: 15px;
-      margin-bottom: 24px;
-      color: #ff6f00;
-    }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      max-width: 500px;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 999px;
-      background-color: #111;
-      color: #fff;
-      box-shadow: 0 0 8px #ff6f00;
-      outline: none;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input[type="text"]:focus, input[type="password"]:focus {
-      box-shadow: 0 0 12px #8e44ad;
-    }
-    select {
-      width: 150px;
-      padding: 8px 10px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: none;
-      background-color: #111;
-      color: #fff;
-      margin: 0 10px 20px 10px;
-      box-shadow: 0 0 8px #ff6f00;
-      cursor: pointer;
-    }
-    button {
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin: 5px;
-      user-select: none;
-      transition: background-color 0.3s, color 0.3s;
-      border: 1px solid #8e44ad;
-      background-color: #111;
-      color: #fff;
-    }
-    button:hover {
-      background-color: #8e44ad;
-      color: #fff;
-    }
-    #adminToggleBtn {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      background-color: #8e44ad;
-      border: none;
-      color: #fff;
-      font-weight: bold;
-      z-index: 9999;
-      padding: 10px 16px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #8e44ad;
-    }
-    #adminToggleBtn:hover {
-      background-color: #a461d9;
-    }
-    #adminArea {
-      max-width: 700px;
-      margin: 20px auto 40px auto;
-      background-color: #111;
-      border: 1px solid #8e44ad;
-      box-shadow: 0 0 8px #8e44ad;
-      border-radius: 12px;
-      padding: 20px;
-      display: none;
-      text-align: center;
-    }
-    /* 관리자 폼 중앙 정렬 + 세로 배치 */
-    #adminForm {
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* 가로 중앙 정렬 */
-      gap: 12px 0;
-      text-align: center;
-    }
-    #adminForm label {
-      display: block;
-      min-width: auto;
-      text-align: center;
-      margin-bottom: 4px;
-      user-select: none;
-      color: #ff6f00;
-    }
-    #adminForm input, #adminForm select {
-      max-width: 300px;
-      width: 100%;
-      margin: 0 auto;
-      text-align: center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RIMO's SONG BOOK</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Jua', sans-serif;
+    background-color: #222;
+    color: #eee;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  /* 기존 스타일 유지 */
 
-    #adminSearchInput {
-      max-width: 300px;
-      margin-bottom: 12px;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto 20px auto;
-      border-collapse: collapse;
-      font-size: 14px;
-      cursor: default;
-    }
-    th, td {
-      padding: 12px;
-      border: 1px solid #8e44ad;
-      text-align: center;
-      word-break: break-word;
-    }
-    th {
-      background-color: #1a1a1a;
-      color: #ff6f00;
-    }
-    tr:nth-child(even) {
-      background-color: #1a1a1a;
-    }
-    tr:nth-child(odd) {
-      background-color: #2a2a2a;
-    }
-    tr:hover {
-      background-color: #333;
-      cursor: pointer;
-    }
-    #noResult {
-      color: #ff6f00;
-      margin-top: 10px;
-      font-size: 15px;
-    }
-    #manual, #price, #songs, #categorySelector, #initialButtons, #searchInput {
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #manual, #price {
-      text-align: left;
-      padding: 20px;
-      background-color: #111;
-      border: 1px solid #8e44ad;
-      box-shadow: 0 0 8px #8e44ad;
-      border-radius: 12px;
-      white-space: pre-line;
-      margin-bottom: 30px;
-    }
-    #categorySelector, #initialButtons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .orange-btn {
-      border-color: #ff6f00;
-      color: #ff6f00;
-      background-color: #111;
-    }
-    .orange-btn:hover {
-      background-color: #ff6f00;
-      color: #111;
-    }
-    .active-btn {
-      background-color: #ff6f00 !important;
-      color: #111 !important;
-      border-color: #ff6f00 !important;
-    }
-    /* Layout adjustments for admin buttons below form */
-    #adminButtons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-    #adminButtons button {
-      min-width: 120px;
-    }
+  /* 비밀번호 모달 오버레이 */
+  #pwModalOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+  #pwModal {
+    background-color: #222;
+    padding: 24px 32px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px #8e44ad;
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    /* 비밀번호 입력 모달 스타일 */
-    #pwModalOverlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.75);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    }
-    #pwModal {
-      background-color: #222;
-      padding: 24px 32px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px #8e44ad;
-      text-align: center;
-      max-width: 320px;
-      width: 90%;
-    }
-    #pwModal input[type="password"] {
-      width: 100%;
-      max-width: 280px;
-      margin: 0 auto;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 999px;
-      border: none;
-      background-color: #111;
-      color: #fff;
-      box-shadow: 0 0 8px #ff6f00;
-      outline: none;
-      text-align: center;
-      display: block;
-    }
-    #pwModal button {
-      padding: 10px 24px;
-      font-size: 16px;
-      border-radius: 20px;
-      background-color: #8e44ad;
-      border: none;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      width: 100%;
-    }
-    #pwModal button:hover {
-      background-color: #a461d9;
-    }
-    #pwErrorMsg {
-      color: #ff6f00;
-      margin-bottom: 12px;
-      height: 18px;
-      font-size: 14px;
-      user-select: none;
-    }
-  </style>
+  /* 버튼 기본 스타일 */
+  button {
+    background-color: #8e44ad;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #b55de5;
+  }
+
+  /* 설명서, 가격표 기본 텍스트 영역 */
+  #manual, #price {
+    white-space: pre-wrap;
+    margin: 10px 20px;
+  }
+
+  /* textarea 스타일 */
+  textarea {
+    font-family: 'Jua', monospace;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #8e44ad;
+    background-color: #333;
+    color: #eee;
+    padding: 8px;
+  }
+</style>
 </head>
 <body>
-  <h1 id="title" onclick="showSection('manual')">RIMO’S SONG BOOK</h1>
-  <p class="headlineNotice" id="headlineNotice">📌 노래책 설명서와 가격표를 먼저 확인하고 이용해주세요!</p>
 
-  <!-- 관리자 모드 토글 버튼 -->
-  <button id="adminToggleBtn" title="관리자 모드 전환">관리자 모드</button>
+<h1 onclick="resetToDefault()" title="홈으로 이동">RIMO's SONG BOOK 🎵</h1>
 
-  <!-- 노래책 기본 UI -->
-  <div id="mainUI">
-    <input type="text" id="searchInput" placeholder="가수 / 제목 검색" oninput="handleSearch()" style="display:none; margin-bottom:20px; max-width:700px;"/>
+<div style="text-align:center; margin-bottom: 20px;">
+  <button onclick="showSection('manual'); toggleEditSection('manual')">노래책 설명서</button>
+  <button onclick="showSection('price'); toggleEditSection('price')">가격표</button>
+  <!-- 기타 버튼 유지 -->
+</div>
 
-    <div>
-      <button onclick="showSection('manual')">노래책 설명서</button>
-      <button onclick="showSection('price')">가격표</button>
-      <button onclick="showSection('songs')">노래목록</button>
-    </div>
+<!-- 주요 섹션 -->
+<div id="manual">• 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
+(코드도 적어주시면 감사합니다!)
+• 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
+(거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)
+• 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.
+• 추천 곡은 디스코드 노래 추천방에 적어주세요.
 
-    <div id="manual" style="display:none;">
-      • 노래 신청을 할땐 꼭!!! 가수와 곡 제목을 함께 적어서 신청해주세요.
-      (코드도 적어주시면 감사합니다!)<br/>
-      • 컨디션에 따라 부르기 어렵다고 판단 될 경우 신청곡을 거절 할 수도 있습니다.
-      (거절 당한 신청은 기본 노래 2곡으로 대체 가능 합니다.)<br/>
-      • 설명을 읽지 않고 신청할 경우 책임은 신청자에게 있습니다.<br/>
-      • 추천 곡은 디스코드 노래 추천방에 적어주세요.<br/><br/>
-      ❌ 과도한 평가와 훈수는 자제 해주세요 ❌
-    </div>
+❌ 과도한 평가와 훈수는 자제 해주세요 ❌</div>
 
-    <div id="price" style="display:none;">
-      • 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
-      • 어려운 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능합니다.<br/>
-      • 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능합니다.<br/>
-      • 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.
-    </div>
+<div id="price">• 기본 노래 신청은 2000치즈 혹은 투네이션으로 신청 가능합니다.
+• 어려운 노래 신청은 5000치즈 혹은 투네이션으로 신청 가능합니다.
+• 유료곡 노래 신청은 10000치즈 이상 혹은 투네이션으로 신청 가능합니다.
+• 개인 소장 노래 녹음본 (믹싱 유무 선택 가능)은 200,000치즈 혹은 투네이션으로 신청 가능합니다.</div>
 
-    <div id="songs" style="display:none; margin-top: 20px;">
-      <div id="categorySelector">
-        <button class="orange-btn active-btn" onclick="selectCategory('전체')" id="cat-btn-전체">전체</button>
-        <button class="orange-btn" onclick="selectCategory('Kpop')" id="cat-btn-Kpop">K-pop</button>
-        <button class="orange-btn" onclick="selectCategory('Kpop 아이돌')" id="cat-btn-Kpop 아이돌">K-pop 아이돌</button>
-        <button class="orange-btn" onclick="selectCategory('Pop')" id="cat-btn-Pop">Pop</button>
-      </div>
-      <div id="initialButtons" style="margin-top: 15px;"></div>
-    </div>
-
-    <table id="songTable" style="display:none;">
-      <thead>
-        <tr><th>가수</th><th>제목</th><th>코드</th><th>난이도</th><th>숙련도</th></tr>
-      </thead>
-      <tbody id="songList"></tbody>
-    </table>
-
-    <p id="noResult" style="display:none;">검색 결과가 없습니다. 추천 곡은 디스코드 노래 추천방에 적어주세요.</p>
+<!-- 비밀번호 모달 -->
+<div id="pwModalOverlay">
+  <div id="pwModal">
+    <h2>관리자 모드 로그인</h2>
+    <input id="passwordInput" type="password" placeholder="비밀번호 입력" autofocus />
+    <button onclick="checkPassword()">로그인</button>
+    <div id="pwMsg" style="color:#f88; margin-top:8px; min-height:20px;"></div>
   </div>
+</div>
 
-  <!-- 관리자 영역 -->
-  <div id="adminArea">
-    <input type="text" id="adminSearchInput" placeholder="가수 / 제목 검색" oninput="handleAdminSearch()" />
-    <form id="adminForm" onsubmit="return false;">
-      <label for="adminCategory">카테고리</label>
-      <select id="adminCategory">
-        <option value="Kpop">K-pop</option>
-        <option value="Kpop 아이돌">K-pop 아이돌</option>
-        <option value="Pop">Pop</option>
-      </select>
+<script>
+  // 관리자 모드 여부
+  let isAdminMode = false;
 
-      <label for="adminInitial">초성</label>
-      <select id="adminInitial">
-        <option value="ㄱ">ㄱ</option><option value="ㄴ">ㄴ</option><option value="ㄷ">ㄷ</option><option value="ㄹ">ㄹ</option><option value="ㅁ">ㅁ</option>
-        <option value="ㅂ">ㅂ</option><option value="ㅅ">ㅅ</option><option value="ㅇ">ㅇ</option><option value="ㅈ">ㅈ</option><option value="ㅊ">ㅊ</option>
-        <option value="ㅋ">ㅋ</option><option value="ㅌ">ㅌ</option><option value="ㅍ">ㅍ</option><option value="ㅎ">ㅎ</option>
-      </select>
-
-      <label for="adminSinger">가수</label>
-      <input type="text" id="adminSinger" />
-
-      <label for="adminTitle">곡 제목</label>
-      <input type="text" id="adminTitle" />
-
-      <label for="adminKey">코드</label>
-      <input type="text" id="adminKey" />
-
-      <label for="adminSkill">숙련도</label>
-      <input type="text" id="adminSkill" placeholder="1~10 숫자 또는 빈칸" />
-
-      <div id="adminButtons">
-        <button onclick="addSong()">추가</button>
-        <button onclick="editSong()">수정</button>
-        <button onclick="deleteSong()">삭제</button>
-        <button onclick="clearForm()">입력 초기화</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- 비밀번호 입력 모달 -->
-  <div id="pwModalOverlay">
-    <div id="pwModal">
-      <div id="pwErrorMsg"></div>
-      <input type="password" id="pwInput" placeholder="비밀번호 입력" />
-      <button onclick="submitPassword()">확인</button>
-    </div>
-  </div>
-
-  <script>
-    const adminToggleBtn = document.getElementById('adminToggleBtn');
-    const adminArea = document.getElementById('adminArea');
-    const mainUI = document.getElementById('mainUI');
-    const pwModalOverlay = document.getElementById('pwModalOverlay');
-    const pwInput = document.getElementById('pwInput');
-    const pwErrorMsg = document.getElementById('pwErrorMsg');
-
-    const PASSWORD = '1234'; // 관리자 비밀번호
-
-    let isAdmin = false;
-
-    adminToggleBtn.addEventListener('click', () => {
-      if (!isAdmin) {
-        pwModalOverlay.style.display = 'flex';
-        pwInput.value = '';
-        pwErrorMsg.textContent = '';
-        pwInput.focus();
-      } else {
-        isAdmin = false;
-        adminArea.style.display = 'none';
-        mainUI.style.display = 'block';
-        adminToggleBtn.textContent = '관리자 모드';
-        resetForm();
-      }
-    });
-
-    function submitPassword() {
-      if (pwInput.value === PASSWORD) {
-        isAdmin = true;
-        pwModalOverlay.style.display = 'none';
-        adminArea.style.display = 'block';
-        mainUI.style.display = 'none';
-        adminToggleBtn.textContent = '관리자 모드 해제';
-        pwInput.value = '';
-        pwErrorMsg.textContent = '';
-      } else {
-        pwErrorMsg.textContent = '비밀번호가 올바르지 않습니다.';
-        pwInput.value = '';
-        pwInput.focus();
-      }
+  // 비밀번호 체크 함수 (비밀번호는 예: 'admin123')
+  function checkPassword() {
+    const pw = document.getElementById('passwordInput').value;
+    const msgDiv = document.getElementById('pwMsg');
+    if (pw === 'admin123') {
+      isAdminMode = true;
+      closePwModal();
+      alert('관리자 모드에 접속했습니다.');
+    } else {
+      msgDiv.textContent = '비밀번호가 틀렸습니다.';
     }
+  }
 
-    pwInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        submitPassword();
-      }
-    });
+  // 비밀번호 모달 닫기
+  function closePwModal() {
+    document.getElementById('pwModalOverlay').style.display = 'none';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('pwMsg').textContent = '';
+  }
 
-    function resetForm() {
-      document.getElementById('adminCategory').value = 'Kpop';
-      document.getElementById('adminInitial').value = 'ㄱ';
-      document.getElementById('adminSinger').value = '';
-      document.getElementById('adminTitle').value = '';
-      document.getElementById('adminKey').value = '';
-      document.getElementById('adminSkill').value = '';
-    }
-
-    // 아래는 각종 함수 틀만 넣어둔 상태입니다.
-    // 필요하면 구현해주세요.
-    function addSong() {
-      alert('추가 기능은 아직 구현되지 않았습니다.');
-    }
-    function editSong() {
-      alert('수정 기능은 아직 구현되지 않았습니다.');
-    }
-    function deleteSong() {
-      alert('삭제 기능은 아직 구현되지 않았습니다.');
-    }
-    function clearForm() {
-      resetForm();
-    }
-    function handleSearch() {
-      // 기본 UI 검색기능 구현 필요 시 여기에 작성
-    }
-    function handleAdminSearch() {
-      // 관리자 검색 기능 구현 필요 시 여기에 작성
-    }
-    function showSection(section) {
-      ['manual', 'price', 'songs'].forEach(s => {
-        document.getElementById(s).style.display = (s === section) ? 'block' : 'none';
-      });
-      if(section === 'songs') {
-        document.getElementById('searchInput').style.display = 'block';
-        document.getElementById('songTable').style.display = 'table';
-      } else {
-        document.getElementById('searchInput').style.display = 'none';
-        document.getElementById('songTable').style.display = 'none';
-      }
-      if(section === 'songs') {
-        document.getElementById('searchInput').style.display = 'block';
-        document.getElementById('songTable').style.display = 'table';
-      } else {
-        document.getElementById('searchInput').style.display = 'none';
-        document.getElementById('songTable').style.display = 'none';
-      }
-    }
-
-    function selectCategory(cat) {
-      // 카테고리 선택 시 처리 (예: 버튼 스타일 변경, 노래 필터링)
-      const buttons = document.querySelectorAll('#categorySelector button');
-      buttons.forEach(btn => {
-        btn.classList.toggle('active-btn', btn.textContent === cat);
-      });
-      // 노래 목록 갱신 필요 시 구현
-    }
-
-    // 초기 화면 설정
+  // 초기 화면 복원 함수 (예시)
+  function resetToDefault() {
+    // 기존 동작 유지 (기본 보여주기 등)
     showSection('manual');
-  </script>
+  }
+
+  // 섹션 보여주기 (기본 원본 유지)
+  function showSection(section) {
+    // manual, price 섹션 토글 예시
+    document.getElementById('manual').style.display = 'none';
+    document.getElementById('price').style.display = 'none';
+    if (section === 'manual') {
+      document.getElementById('manual').style.display = 'block';
+    } else if (section === 'price') {
+      document.getElementById('price').style.display = 'block';
+    }
+  }
+
+  // 초기 실행: 노래책 설명서 보여주기
+  showSection('manual');
+
+  // 편집 모드 플래그
+  let manualEditing = false;
+  let priceEditing = false;
+
+  // 원본 설명서와 가격표 텍스트 저장
+  let manualText = document.getElementById('manual').textContent;
+  let priceText = document.getElementById('price').textContent;
+
+  // 편집 영역 참조
+  const manualDiv = document.getElementById('manual');
+  const priceDiv = document.getElementById('price');
+
+  // 편집 모드 토글 함수
+  function toggleEditSection(section) {
+    if (!isAdminMode) return; // 관리자 아니면 편집 불가
+
+    if (section === 'manual') {
+      if (!manualEditing) {
+        enterEditMode('manual');
+      } else {
+        exitEditMode('manual');
+      }
+    } else if (section === 'price') {
+      if (!priceEditing) {
+        enterEditMode('price');
+      } else {
+        exitEditMode('price');
+      }
+    }
+  }
+
+  // 편집 모드 진입
+  function enterEditMode(section) {
+    if (section === 'manual') {
+      manualEditing = true;
+      manualDiv.innerHTML = '';
+
+      const textarea = document.createElement('textarea');
+      textarea.id = 'manualEditArea';
+      textarea.style.width = '100%';
+      textarea.style.height = '200px';
+      textarea.value = manualText;
+      manualDiv.appendChild(textarea);
+
+      const btnSave = document.createElement('button');
+      btnSave.textContent = '저장';
+      btnSave.style.marginRight = '8px';
+      btnSave.onclick = () => saveEdit('manual');
+
+      const btnCancel = document.createElement('button');
+      btnCancel.textContent = '취소';
+      btnCancel.onclick = () => cancelEdit('manual');
+
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '12px';
+      btnDiv.appendChild(btnSave);
+      btnDiv.appendChild(btnCancel);
+
+      manualDiv.appendChild(btnDiv);
+    } else if (section === 'price') {
+      priceEditing = true;
+      priceDiv.innerHTML = '';
+
+      const textarea = document.createElement('textarea');
+      textarea.id = 'priceEditArea';
+      textarea.style.width = '100%';
+      textarea.style.height = '200px';
+      textarea.value = priceText;
+      priceDiv.appendChild(textarea);
+
+      const btnSave = document.createElement('button');
+      btnSave.textContent = '저장';
+      btnSave.style.marginRight = '8px';
+      btnSave.onclick = () => saveEdit('price');
+
+      const btnCancel = document.createElement('button');
+      btnCancel.textContent = '취소';
+      btnCancel.onclick = () => cancelEdit('price');
+
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '12px';
+      btnDiv.appendChild(btnSave);
+      btnDiv.appendChild(btnCancel);
+
+      priceDiv.appendChild(btnDiv);
+    }
+  }
+
+  // 편집 모드 종료 (텍스트 원복)
+  function exitEditMode(section) {
+    if (section === 'manual') {
+      manualEditing = false;
+      manualDiv.textContent = manualText;
+    } else if (section === 'price') {
+      priceEditing = false;
+      priceDiv.textContent = priceText;
+    }
+  }
+
+  // 편집 저장
+  function saveEdit(section) {
+    if (section === 'manual') {
+      const textarea = document.getElementById('manualEditArea');
+      manualText = textarea.value;
+      exitEditMode('manual');
+      alert('노래책 설명서가 저장되었습니다.');
+    } else if (section === 'price') {
+      const textarea = document.getElementById('priceEditArea');
+      priceText = textarea.value;
+      exitEditMode('price');
+      alert('가격표가 저장되었습니다.');
+    }
+  }
+
+  // 편집 취소
+  function cancelEdit(section) {
+    exitEditMode(section);
+  }
+</script>
+
 </body>
 </html>
